@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ClyMQ/client/clients"
+	"hanyuMQ/client/pks"
 	"fmt"
 	"os"
 
@@ -41,7 +41,6 @@ func main() {
 
 	case "c":	
 		consumer,_ := clients.NewConsumer("0.0.0.0:2181", "consumer1", port)
-		//start a server for pub and pinpong
 		go consumer.Start_server()
 
 		consumer.Subscription("phone_number", "yclchuxue", 2)
@@ -54,5 +53,4 @@ func main() {
 		})
 	}
 
-	//send ip and port for brokerserver can pub this client
 }
