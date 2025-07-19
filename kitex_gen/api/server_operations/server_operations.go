@@ -48,17 +48,17 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"CloseAccept": kitex.NewMethodInfo(
-		closeAcceptHandler,
-		newServer_OperationsCloseAcceptArgs,
-		newServer_OperationsCloseAcceptResult,
-		false,
-		kitex.WithStreamingMode(kitex.StreamingNone),
-	),
 	"PrepareSend": kitex.NewMethodInfo(
 		prepareSendHandler,
 		newServer_OperationsPrepareSendArgs,
 		newServer_OperationsPrepareSendResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"CloseAccept": kitex.NewMethodInfo(
+		closeAcceptHandler,
+		newServer_OperationsCloseAcceptArgs,
+		newServer_OperationsCloseAcceptResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -253,24 +253,6 @@ func newServer_OperationsPrepareAcceptResult() interface{} {
 	return api.NewServer_OperationsPrepareAcceptResult()
 }
 
-func closeAcceptHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*api.Server_OperationsCloseAcceptArgs)
-	realResult := result.(*api.Server_OperationsCloseAcceptResult)
-	success, err := handler.(api.Server_Operations).CloseAccept(ctx, realArg.Req)
-	if err != nil {
-		return err
-	}
-	realResult.Success = success
-	return nil
-}
-func newServer_OperationsCloseAcceptArgs() interface{} {
-	return api.NewServer_OperationsCloseAcceptArgs()
-}
-
-func newServer_OperationsCloseAcceptResult() interface{} {
-	return api.NewServer_OperationsCloseAcceptResult()
-}
-
 func prepareSendHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*api.Server_OperationsPrepareSendArgs)
 	realResult := result.(*api.Server_OperationsPrepareSendResult)
@@ -287,6 +269,24 @@ func newServer_OperationsPrepareSendArgs() interface{} {
 
 func newServer_OperationsPrepareSendResult() interface{} {
 	return api.NewServer_OperationsPrepareSendResult()
+}
+
+func closeAcceptHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*api.Server_OperationsCloseAcceptArgs)
+	realResult := result.(*api.Server_OperationsCloseAcceptResult)
+	success, err := handler.(api.Server_Operations).CloseAccept(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newServer_OperationsCloseAcceptArgs() interface{} {
+	return api.NewServer_OperationsCloseAcceptArgs()
+}
+
+func newServer_OperationsCloseAcceptResult() interface{} {
+	return api.NewServer_OperationsCloseAcceptResult()
 }
 
 func prepareStateHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -439,21 +439,21 @@ func (p *kClient) PrepareAccept(ctx context.Context, req *api.PrepareAcceptReque
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) CloseAccept(ctx context.Context, req *api.CloseAcceptRequest) (r *api.CloseAcceptResponse, err error) {
-	var _args api.Server_OperationsCloseAcceptArgs
-	_args.Req = req
-	var _result api.Server_OperationsCloseAcceptResult
-	if err = p.c.Call(ctx, "CloseAccept", &_args, &_result); err != nil {
-		return
-	}
-	return _result.GetSuccess(), nil
-}
-
 func (p *kClient) PrepareSend(ctx context.Context, req *api.PrepareSendRequest) (r *api.PrepareSendResponse, err error) {
 	var _args api.Server_OperationsPrepareSendArgs
 	_args.Req = req
 	var _result api.Server_OperationsPrepareSendResult
 	if err = p.c.Call(ctx, "PrepareSend", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) CloseAccept(ctx context.Context, req *api.CloseAcceptRequest) (r *api.CloseAcceptResponse, err error) {
+	var _args api.Server_OperationsCloseAcceptArgs
+	_args.Req = req
+	var _result api.Server_OperationsCloseAcceptResult
+	if err = p.c.Call(ctx, "CloseAccept", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -8,10 +8,15 @@ import (
 )
 
 type PushRequest struct {
-	Producer string `thrift:"producer,1" frugal:"1,default,string" json:"producer"`
-	Topic    string `thrift:"topic,2" frugal:"2,default,string" json:"topic"`
-	Key      string `thrift:"key,3" frugal:"3,default,string" json:"key"`
-	Message  []byte `thrift:"message,4" frugal:"4,default,binary" json:"message"`
+	Producer   string `thrift:"producer,1" frugal:"1,default,string" json:"producer"`
+	Topic      string `thrift:"topic,2" frugal:"2,default,string" json:"topic"`
+	Key        string `thrift:"key,3" frugal:"3,default,string" json:"key"`
+	Message    []byte `thrift:"message,4" frugal:"4,default,binary" json:"message"`
+	Endindex   int64  `thrift:"Endindex,5" frugal:"5,default,i64" json:"Endindex"`
+	StartIndex int64  `thrift:"StartIndex,6" frugal:"6,default,i64" json:"StartIndex"`
+	Size       int8   `thrift:"Size,7" frugal:"7,default,i8" json:"Size"`
+	Ack        int8   `thrift:"Ack,8" frugal:"8,default,i8" json:"Ack"`
+	Cmdindex   int64  `thrift:"Cmdindex,9" frugal:"9,default,i64" json:"Cmdindex"`
 }
 
 func NewPushRequest() *PushRequest {
@@ -36,6 +41,26 @@ func (p *PushRequest) GetKey() (v string) {
 func (p *PushRequest) GetMessage() (v []byte) {
 	return p.Message
 }
+
+func (p *PushRequest) GetEndindex() (v int64) {
+	return p.Endindex
+}
+
+func (p *PushRequest) GetStartIndex() (v int64) {
+	return p.StartIndex
+}
+
+func (p *PushRequest) GetSize() (v int8) {
+	return p.Size
+}
+
+func (p *PushRequest) GetAck() (v int8) {
+	return p.Ack
+}
+
+func (p *PushRequest) GetCmdindex() (v int64) {
+	return p.Cmdindex
+}
 func (p *PushRequest) SetProducer(val string) {
 	p.Producer = val
 }
@@ -47,6 +72,21 @@ func (p *PushRequest) SetKey(val string) {
 }
 func (p *PushRequest) SetMessage(val []byte) {
 	p.Message = val
+}
+func (p *PushRequest) SetEndindex(val int64) {
+	p.Endindex = val
+}
+func (p *PushRequest) SetStartIndex(val int64) {
+	p.StartIndex = val
+}
+func (p *PushRequest) SetSize(val int8) {
+	p.Size = val
+}
+func (p *PushRequest) SetAck(val int8) {
+	p.Ack = val
+}
+func (p *PushRequest) SetCmdindex(val int64) {
+	p.Cmdindex = val
 }
 
 func (p *PushRequest) String() string {
@@ -61,10 +101,16 @@ var fieldIDToName_PushRequest = map[int16]string{
 	2: "topic",
 	3: "key",
 	4: "message",
+	5: "Endindex",
+	6: "StartIndex",
+	7: "Size",
+	8: "Ack",
+	9: "Cmdindex",
 }
 
 type PushResponse struct {
-	Ret bool `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
+	Ret bool   `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
+	Err string `thrift:"err,2" frugal:"2,default,string" json:"err"`
 }
 
 func NewPushResponse() *PushResponse {
@@ -77,8 +123,15 @@ func (p *PushResponse) InitDefault() {
 func (p *PushResponse) GetRet() (v bool) {
 	return p.Ret
 }
+
+func (p *PushResponse) GetErr() (v string) {
+	return p.Err
+}
 func (p *PushResponse) SetRet(val bool) {
 	p.Ret = val
+}
+func (p *PushResponse) SetErr(val string) {
+	p.Err = val
 }
 
 func (p *PushResponse) String() string {
@@ -90,12 +143,16 @@ func (p *PushResponse) String() string {
 
 var fieldIDToName_PushResponse = map[int16]string{
 	1: "ret",
+	2: "err",
 }
 
 type PullRequest struct {
 	Consumer string `thrift:"consumer,1" frugal:"1,default,string" json:"consumer"`
 	Topic    string `thrift:"topic,2" frugal:"2,default,string" json:"topic"`
 	Key      string `thrift:"key,3" frugal:"3,default,string" json:"key"`
+	Offset   int64  `thrift:"offset,4" frugal:"4,default,i64" json:"offset"`
+	Size     int8   `thrift:"size,5" frugal:"5,default,i8" json:"size"`
+	Option   int8   `thrift:"option,6" frugal:"6,default,i8" json:"option"`
 }
 
 func NewPullRequest() *PullRequest {
@@ -116,6 +173,18 @@ func (p *PullRequest) GetTopic() (v string) {
 func (p *PullRequest) GetKey() (v string) {
 	return p.Key
 }
+
+func (p *PullRequest) GetOffset() (v int64) {
+	return p.Offset
+}
+
+func (p *PullRequest) GetSize() (v int8) {
+	return p.Size
+}
+
+func (p *PullRequest) GetOption() (v int8) {
+	return p.Option
+}
 func (p *PullRequest) SetConsumer(val string) {
 	p.Consumer = val
 }
@@ -124,6 +193,15 @@ func (p *PullRequest) SetTopic(val string) {
 }
 func (p *PullRequest) SetKey(val string) {
 	p.Key = val
+}
+func (p *PullRequest) SetOffset(val int64) {
+	p.Offset = val
+}
+func (p *PullRequest) SetSize(val int8) {
+	p.Size = val
+}
+func (p *PullRequest) SetOption(val int8) {
+	p.Option = val
 }
 
 func (p *PullRequest) String() string {
@@ -137,10 +215,18 @@ var fieldIDToName_PullRequest = map[int16]string{
 	1: "consumer",
 	2: "topic",
 	3: "key",
+	4: "offset",
+	5: "size",
+	6: "option",
 }
 
 type PullResponse struct {
-	Msgs []byte `thrift:"Msgs,1" frugal:"1,default,binary" json:"Msgs"`
+	Msgs       []byte `thrift:"Msgs,1" frugal:"1,default,binary" json:"Msgs"`
+	Ret        bool   `thrift:"Ret,2" frugal:"2,default,bool" json:"Ret"`
+	StartIndex int64  `thrift:"Start_index,3" frugal:"3,default,i64" json:"Start_index"`
+	EndIndex   int64  `thrift:"End_index,4" frugal:"4,default,i64" json:"End_index"`
+	Size       int8   `thrift:"Size,5" frugal:"5,default,i8" json:"Size"`
+	Err        string `thrift:"Err,6" frugal:"6,default,string" json:"Err"`
 }
 
 func NewPullResponse() *PullResponse {
@@ -153,8 +239,43 @@ func (p *PullResponse) InitDefault() {
 func (p *PullResponse) GetMsgs() (v []byte) {
 	return p.Msgs
 }
+
+func (p *PullResponse) GetRet() (v bool) {
+	return p.Ret
+}
+
+func (p *PullResponse) GetStartIndex() (v int64) {
+	return p.StartIndex
+}
+
+func (p *PullResponse) GetEndIndex() (v int64) {
+	return p.EndIndex
+}
+
+func (p *PullResponse) GetSize() (v int8) {
+	return p.Size
+}
+
+func (p *PullResponse) GetErr() (v string) {
+	return p.Err
+}
 func (p *PullResponse) SetMsgs(val []byte) {
 	p.Msgs = val
+}
+func (p *PullResponse) SetRet(val bool) {
+	p.Ret = val
+}
+func (p *PullResponse) SetStartIndex(val int64) {
+	p.StartIndex = val
+}
+func (p *PullResponse) SetEndIndex(val int64) {
+	p.EndIndex = val
+}
+func (p *PullResponse) SetSize(val int8) {
+	p.Size = val
+}
+func (p *PullResponse) SetErr(val string) {
+	p.Err = val
 }
 
 func (p *PullResponse) String() string {
@@ -166,6 +287,11 @@ func (p *PullResponse) String() string {
 
 var fieldIDToName_PullResponse = map[int16]string{
 	1: "Msgs",
+	2: "Ret",
+	3: "Start_index",
+	4: "End_index",
+	5: "Size",
+	6: "Err",
 }
 
 type InfoRequest struct {
@@ -396,6 +522,91 @@ var fieldIDToName_StartGetMessageResponse = map[int16]string{
 	1: "ret",
 }
 
+type SubRequest struct {
+	Consumer string `thrift:"consumer,1" frugal:"1,default,string" json:"consumer"`
+	Topic    string `thrift:"topic,2" frugal:"2,default,string" json:"topic"`
+	Key      string `thrift:"key,3" frugal:"3,default,string" json:"key"`
+	Option   int8   `thrift:"option,4" frugal:"4,default,i8" json:"option"`
+}
+
+func NewSubRequest() *SubRequest {
+	return &SubRequest{}
+}
+
+func (p *SubRequest) InitDefault() {
+}
+
+func (p *SubRequest) GetConsumer() (v string) {
+	return p.Consumer
+}
+
+func (p *SubRequest) GetTopic() (v string) {
+	return p.Topic
+}
+
+func (p *SubRequest) GetKey() (v string) {
+	return p.Key
+}
+
+func (p *SubRequest) GetOption() (v int8) {
+	return p.Option
+}
+func (p *SubRequest) SetConsumer(val string) {
+	p.Consumer = val
+}
+func (p *SubRequest) SetTopic(val string) {
+	p.Topic = val
+}
+func (p *SubRequest) SetKey(val string) {
+	p.Key = val
+}
+func (p *SubRequest) SetOption(val int8) {
+	p.Option = val
+}
+
+func (p *SubRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SubRequest(%+v)", *p)
+}
+
+var fieldIDToName_SubRequest = map[int16]string{
+	1: "consumer",
+	2: "topic",
+	3: "key",
+	4: "option",
+}
+
+type SubResponse struct {
+	Ret bool `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
+}
+
+func NewSubResponse() *SubResponse {
+	return &SubResponse{}
+}
+
+func (p *SubResponse) InitDefault() {
+}
+
+func (p *SubResponse) GetRet() (v bool) {
+	return p.Ret
+}
+func (p *SubResponse) SetRet(val bool) {
+	p.Ret = val
+}
+
+func (p *SubResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SubResponse(%+v)", *p)
+}
+
+var fieldIDToName_SubResponse = map[int16]string{
+	1: "ret",
+}
+
 type CloseGetMessageRequest struct {
 	TopicName string `thrift:"topic_name,1" frugal:"1,default,string" json:"topic_name"`
 	PartName  string `thrift:"part_name,2" frugal:"2,default,string" json:"part_name"`
@@ -479,185 +690,6 @@ func (p *CloseGetMessageResponse) String() string {
 
 var fieldIDToName_CloseGetMessageResponse = map[int16]string{
 	1: "ret",
-}
-
-type PrepareAcceptRequest struct {
-	TopicName string `thrift:"topic_name,1" frugal:"1,default,string" json:"topic_name"`
-	PartName  string `thrift:"part_name,2" frugal:"2,default,string" json:"part_name"`
-	FileName  string `thrift:"file_name,3" frugal:"3,default,string" json:"file_name"`
-}
-
-func NewPrepareAcceptRequest() *PrepareAcceptRequest {
-	return &PrepareAcceptRequest{}
-}
-
-func (p *PrepareAcceptRequest) InitDefault() {
-}
-
-func (p *PrepareAcceptRequest) GetTopicName() (v string) {
-	return p.TopicName
-}
-
-func (p *PrepareAcceptRequest) GetPartName() (v string) {
-	return p.PartName
-}
-
-func (p *PrepareAcceptRequest) GetFileName() (v string) {
-	return p.FileName
-}
-func (p *PrepareAcceptRequest) SetTopicName(val string) {
-	p.TopicName = val
-}
-func (p *PrepareAcceptRequest) SetPartName(val string) {
-	p.PartName = val
-}
-func (p *PrepareAcceptRequest) SetFileName(val string) {
-	p.FileName = val
-}
-
-func (p *PrepareAcceptRequest) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PrepareAcceptRequest(%+v)", *p)
-}
-
-var fieldIDToName_PrepareAcceptRequest = map[int16]string{
-	1: "topic_name",
-	2: "part_name",
-	3: "file_name",
-}
-
-type PrepareAcceptResponse struct {
-	Ret bool   `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
-	Err string `thrift:"err,2" frugal:"2,default,string" json:"err"`
-}
-
-func NewPrepareAcceptResponse() *PrepareAcceptResponse {
-	return &PrepareAcceptResponse{}
-}
-
-func (p *PrepareAcceptResponse) InitDefault() {
-}
-
-func (p *PrepareAcceptResponse) GetRet() (v bool) {
-	return p.Ret
-}
-
-func (p *PrepareAcceptResponse) GetErr() (v string) {
-	return p.Err
-}
-func (p *PrepareAcceptResponse) SetRet(val bool) {
-	p.Ret = val
-}
-func (p *PrepareAcceptResponse) SetErr(val string) {
-	p.Err = val
-}
-
-func (p *PrepareAcceptResponse) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PrepareAcceptResponse(%+v)", *p)
-}
-
-var fieldIDToName_PrepareAcceptResponse = map[int16]string{
-	1: "ret",
-	2: "err",
-}
-
-type PrepareStateRequest struct {
-	TopicName string `thrift:"TopicName,1" frugal:"1,default,string" json:"TopicName"`
-	PartName  string `thrift:"PartName,2" frugal:"2,default,string" json:"PartName"`
-	State     int8   `thrift:"State,3" frugal:"3,default,i8" json:"State"`
-	Brokers   []byte `thrift:"Brokers,4" frugal:"4,default,binary" json:"Brokers"`
-}
-
-func NewPrepareStateRequest() *PrepareStateRequest {
-	return &PrepareStateRequest{}
-}
-
-func (p *PrepareStateRequest) InitDefault() {
-}
-
-func (p *PrepareStateRequest) GetTopicName() (v string) {
-	return p.TopicName
-}
-
-func (p *PrepareStateRequest) GetPartName() (v string) {
-	return p.PartName
-}
-
-func (p *PrepareStateRequest) GetState() (v int8) {
-	return p.State
-}
-
-func (p *PrepareStateRequest) GetBrokers() (v []byte) {
-	return p.Brokers
-}
-func (p *PrepareStateRequest) SetTopicName(val string) {
-	p.TopicName = val
-}
-func (p *PrepareStateRequest) SetPartName(val string) {
-	p.PartName = val
-}
-func (p *PrepareStateRequest) SetState(val int8) {
-	p.State = val
-}
-func (p *PrepareStateRequest) SetBrokers(val []byte) {
-	p.Brokers = val
-}
-
-func (p *PrepareStateRequest) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PrepareStateRequest(%+v)", *p)
-}
-
-var fieldIDToName_PrepareStateRequest = map[int16]string{
-	1: "TopicName",
-	2: "PartName",
-	3: "State",
-	4: "Brokers",
-}
-
-type PrepareStateResponse struct {
-	Ret bool   `thrift:"Ret,1" frugal:"1,default,bool" json:"Ret"`
-	Err string `thrift:"Err,2" frugal:"2,default,string" json:"Err"`
-}
-
-func NewPrepareStateResponse() *PrepareStateResponse {
-	return &PrepareStateResponse{}
-}
-
-func (p *PrepareStateResponse) InitDefault() {
-}
-
-func (p *PrepareStateResponse) GetRet() (v bool) {
-	return p.Ret
-}
-
-func (p *PrepareStateResponse) GetErr() (v string) {
-	return p.Err
-}
-func (p *PrepareStateResponse) SetRet(val bool) {
-	p.Ret = val
-}
-func (p *PrepareStateResponse) SetErr(val string) {
-	p.Err = val
-}
-
-func (p *PrepareStateResponse) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PrepareStateResponse(%+v)", *p)
-}
-
-var fieldIDToName_PrepareStateResponse = map[int16]string{
-	1: "Ret",
-	2: "Err",
 }
 
 type CloseAcceptRequest struct {
@@ -761,6 +793,91 @@ var fieldIDToName_CloseAcceptResponse = map[int16]string{
 	1: "ret",
 	2: "startindex",
 	3: "endindex",
+}
+
+type PrepareAcceptRequest struct {
+	TopicName string `thrift:"topic_name,1" frugal:"1,default,string" json:"topic_name"`
+	PartName  string `thrift:"part_name,2" frugal:"2,default,string" json:"part_name"`
+	FileName  string `thrift:"file_name,3" frugal:"3,default,string" json:"file_name"`
+}
+
+func NewPrepareAcceptRequest() *PrepareAcceptRequest {
+	return &PrepareAcceptRequest{}
+}
+
+func (p *PrepareAcceptRequest) InitDefault() {
+}
+
+func (p *PrepareAcceptRequest) GetTopicName() (v string) {
+	return p.TopicName
+}
+
+func (p *PrepareAcceptRequest) GetPartName() (v string) {
+	return p.PartName
+}
+
+func (p *PrepareAcceptRequest) GetFileName() (v string) {
+	return p.FileName
+}
+func (p *PrepareAcceptRequest) SetTopicName(val string) {
+	p.TopicName = val
+}
+func (p *PrepareAcceptRequest) SetPartName(val string) {
+	p.PartName = val
+}
+func (p *PrepareAcceptRequest) SetFileName(val string) {
+	p.FileName = val
+}
+
+func (p *PrepareAcceptRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PrepareAcceptRequest(%+v)", *p)
+}
+
+var fieldIDToName_PrepareAcceptRequest = map[int16]string{
+	1: "topic_name",
+	2: "part_name",
+	3: "file_name",
+}
+
+type PrepareAcceptResponse struct {
+	Ret bool   `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
+	Err string `thrift:"err,2" frugal:"2,default,string" json:"err"`
+}
+
+func NewPrepareAcceptResponse() *PrepareAcceptResponse {
+	return &PrepareAcceptResponse{}
+}
+
+func (p *PrepareAcceptResponse) InitDefault() {
+}
+
+func (p *PrepareAcceptResponse) GetRet() (v bool) {
+	return p.Ret
+}
+
+func (p *PrepareAcceptResponse) GetErr() (v string) {
+	return p.Err
+}
+func (p *PrepareAcceptResponse) SetRet(val bool) {
+	p.Ret = val
+}
+func (p *PrepareAcceptResponse) SetErr(val string) {
+	p.Err = val
+}
+
+func (p *PrepareAcceptResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PrepareAcceptResponse(%+v)", *p)
+}
+
+var fieldIDToName_PrepareAcceptResponse = map[int16]string{
+	1: "ret",
+	2: "err",
 }
 
 type PrepareSendRequest struct {
@@ -873,6 +990,100 @@ func (p *PrepareSendResponse) String() string {
 var fieldIDToName_PrepareSendResponse = map[int16]string{
 	1: "ret",
 	2: "err",
+}
+
+type PrepareStateRequest struct {
+	TopicName string `thrift:"TopicName,1" frugal:"1,default,string" json:"TopicName"`
+	PartName  string `thrift:"PartName,2" frugal:"2,default,string" json:"PartName"`
+	State     int8   `thrift:"State,3" frugal:"3,default,i8" json:"State"`
+	Brokers   []byte `thrift:"Brokers,4" frugal:"4,default,binary" json:"Brokers"`
+}
+
+func NewPrepareStateRequest() *PrepareStateRequest {
+	return &PrepareStateRequest{}
+}
+
+func (p *PrepareStateRequest) InitDefault() {
+}
+
+func (p *PrepareStateRequest) GetTopicName() (v string) {
+	return p.TopicName
+}
+
+func (p *PrepareStateRequest) GetPartName() (v string) {
+	return p.PartName
+}
+
+func (p *PrepareStateRequest) GetState() (v int8) {
+	return p.State
+}
+
+func (p *PrepareStateRequest) GetBrokers() (v []byte) {
+	return p.Brokers
+}
+func (p *PrepareStateRequest) SetTopicName(val string) {
+	p.TopicName = val
+}
+func (p *PrepareStateRequest) SetPartName(val string) {
+	p.PartName = val
+}
+func (p *PrepareStateRequest) SetState(val int8) {
+	p.State = val
+}
+func (p *PrepareStateRequest) SetBrokers(val []byte) {
+	p.Brokers = val
+}
+
+func (p *PrepareStateRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PrepareStateRequest(%+v)", *p)
+}
+
+var fieldIDToName_PrepareStateRequest = map[int16]string{
+	1: "TopicName",
+	2: "PartName",
+	3: "State",
+	4: "Brokers",
+}
+
+type PrepareStateResponse struct {
+	Ret bool   `thrift:"Ret,1" frugal:"1,default,bool" json:"Ret"`
+	Err string `thrift:"Err,2" frugal:"2,default,string" json:"Err"`
+}
+
+func NewPrepareStateResponse() *PrepareStateResponse {
+	return &PrepareStateResponse{}
+}
+
+func (p *PrepareStateResponse) InitDefault() {
+}
+
+func (p *PrepareStateResponse) GetRet() (v bool) {
+	return p.Ret
+}
+
+func (p *PrepareStateResponse) GetErr() (v string) {
+	return p.Err
+}
+func (p *PrepareStateResponse) SetRet(val bool) {
+	p.Ret = val
+}
+func (p *PrepareStateResponse) SetErr(val string) {
+	p.Err = val
+}
+
+func (p *PrepareStateResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PrepareStateResponse(%+v)", *p)
+}
+
+var fieldIDToName_PrepareStateResponse = map[int16]string{
+	1: "Ret",
+	2: "Err",
 }
 
 type AddRaftPartitionRequest struct {
@@ -1224,6 +1435,158 @@ var fieldIDToName_CloseFetchPartitionResponse = map[int16]string{
 	2: "Err",
 }
 
+type PubRequest struct {
+	TopicName  string `thrift:"topic_name,1" frugal:"1,default,string" json:"topic_name"`
+	PartName   string `thrift:"part_name,2" frugal:"2,default,string" json:"part_name"`
+	StartIndex int64  `thrift:"start_index,3" frugal:"3,default,i64" json:"start_index"`
+	EndIndex   int64  `thrift:"end_index,4" frugal:"4,default,i64" json:"end_index"`
+	Msg        []byte `thrift:"msg,5" frugal:"5,default,binary" json:"msg"`
+}
+
+func NewPubRequest() *PubRequest {
+	return &PubRequest{}
+}
+
+func (p *PubRequest) InitDefault() {
+}
+
+func (p *PubRequest) GetTopicName() (v string) {
+	return p.TopicName
+}
+
+func (p *PubRequest) GetPartName() (v string) {
+	return p.PartName
+}
+
+func (p *PubRequest) GetStartIndex() (v int64) {
+	return p.StartIndex
+}
+
+func (p *PubRequest) GetEndIndex() (v int64) {
+	return p.EndIndex
+}
+
+func (p *PubRequest) GetMsg() (v []byte) {
+	return p.Msg
+}
+func (p *PubRequest) SetTopicName(val string) {
+	p.TopicName = val
+}
+func (p *PubRequest) SetPartName(val string) {
+	p.PartName = val
+}
+func (p *PubRequest) SetStartIndex(val int64) {
+	p.StartIndex = val
+}
+func (p *PubRequest) SetEndIndex(val int64) {
+	p.EndIndex = val
+}
+func (p *PubRequest) SetMsg(val []byte) {
+	p.Msg = val
+}
+
+func (p *PubRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PubRequest(%+v)", *p)
+}
+
+var fieldIDToName_PubRequest = map[int16]string{
+	1: "topic_name",
+	2: "part_name",
+	3: "start_index",
+	4: "end_index",
+	5: "msg",
+}
+
+type PubResponse struct {
+	Ret bool `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
+}
+
+func NewPubResponse() *PubResponse {
+	return &PubResponse{}
+}
+
+func (p *PubResponse) InitDefault() {
+}
+
+func (p *PubResponse) GetRet() (v bool) {
+	return p.Ret
+}
+func (p *PubResponse) SetRet(val bool) {
+	p.Ret = val
+}
+
+func (p *PubResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PubResponse(%+v)", *p)
+}
+
+var fieldIDToName_PubResponse = map[int16]string{
+	1: "ret",
+}
+
+type PingPongRequest struct {
+	Ping bool `thrift:"ping,1" frugal:"1,default,bool" json:"ping"`
+}
+
+func NewPingPongRequest() *PingPongRequest {
+	return &PingPongRequest{}
+}
+
+func (p *PingPongRequest) InitDefault() {
+}
+
+func (p *PingPongRequest) GetPing() (v bool) {
+	return p.Ping
+}
+func (p *PingPongRequest) SetPing(val bool) {
+	p.Ping = val
+}
+
+func (p *PingPongRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PingPongRequest(%+v)", *p)
+}
+
+var fieldIDToName_PingPongRequest = map[int16]string{
+	1: "ping",
+}
+
+type PingPongResponse struct {
+	Pong bool `thrift:"pong,1" frugal:"1,default,bool" json:"pong"`
+}
+
+func NewPingPongResponse() *PingPongResponse {
+	return &PingPongResponse{}
+}
+
+func (p *PingPongResponse) InitDefault() {
+}
+
+func (p *PingPongResponse) GetPong() (v bool) {
+	return p.Pong
+}
+func (p *PingPongResponse) SetPong(val bool) {
+	p.Pong = val
+}
+
+func (p *PingPongResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("PingPongResponse(%+v)", *p)
+}
+
+var fieldIDToName_PingPongResponse = map[int16]string{
+	1: "pong",
+}
+
 type BroInfoRequest struct {
 	BrokerName     string `thrift:"broker_name,1" frugal:"1,default,string" json:"broker_name"`
 	BrokerHostPort string `thrift:"broker_host_port,2" frugal:"2,default,string" json:"broker_host_port"`
@@ -1289,73 +1652,6 @@ func (p *BroInfoResponse) String() string {
 
 var fieldIDToName_BroInfoResponse = map[int16]string{
 	1: "ret",
-}
-
-type BroGetConfigRequest struct {
-	Propertyinfo []byte `thrift:"propertyinfo,1" frugal:"1,default,binary" json:"propertyinfo"`
-}
-
-func NewBroGetConfigRequest() *BroGetConfigRequest {
-	return &BroGetConfigRequest{}
-}
-
-func (p *BroGetConfigRequest) InitDefault() {
-}
-
-func (p *BroGetConfigRequest) GetPropertyinfo() (v []byte) {
-	return p.Propertyinfo
-}
-func (p *BroGetConfigRequest) SetPropertyinfo(val []byte) {
-	p.Propertyinfo = val
-}
-
-func (p *BroGetConfigRequest) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("BroGetConfigRequest(%+v)", *p)
-}
-
-var fieldIDToName_BroGetConfigRequest = map[int16]string{
-	1: "propertyinfo",
-}
-
-type BroGetConfigResponse struct {
-	Ret        bool   `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
-	Brokerinfo []byte `thrift:"brokerinfo,2" frugal:"2,default,binary" json:"brokerinfo"`
-}
-
-func NewBroGetConfigResponse() *BroGetConfigResponse {
-	return &BroGetConfigResponse{}
-}
-
-func (p *BroGetConfigResponse) InitDefault() {
-}
-
-func (p *BroGetConfigResponse) GetRet() (v bool) {
-	return p.Ret
-}
-
-func (p *BroGetConfigResponse) GetBrokerinfo() (v []byte) {
-	return p.Brokerinfo
-}
-func (p *BroGetConfigResponse) SetRet(val bool) {
-	p.Ret = val
-}
-func (p *BroGetConfigResponse) SetBrokerinfo(val []byte) {
-	p.Brokerinfo = val
-}
-
-func (p *BroGetConfigResponse) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("BroGetConfigResponse(%+v)", *p)
-}
-
-var fieldIDToName_BroGetConfigResponse = map[int16]string{
-	1: "ret",
-	2: "brokerinfo",
 }
 
 type ProGetBrokRequest struct {
@@ -1441,6 +1737,176 @@ var fieldIDToName_ProGetBrokResponse = map[int16]string{
 	1: "ret",
 	2: "broker_host_port",
 	3: "Err",
+}
+
+type BroGetConfigRequest struct {
+	Propertyinfo []byte `thrift:"propertyinfo,1" frugal:"1,default,binary" json:"propertyinfo"`
+}
+
+func NewBroGetConfigRequest() *BroGetConfigRequest {
+	return &BroGetConfigRequest{}
+}
+
+func (p *BroGetConfigRequest) InitDefault() {
+}
+
+func (p *BroGetConfigRequest) GetPropertyinfo() (v []byte) {
+	return p.Propertyinfo
+}
+func (p *BroGetConfigRequest) SetPropertyinfo(val []byte) {
+	p.Propertyinfo = val
+}
+
+func (p *BroGetConfigRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("BroGetConfigRequest(%+v)", *p)
+}
+
+var fieldIDToName_BroGetConfigRequest = map[int16]string{
+	1: "propertyinfo",
+}
+
+type BroGetConfigResponse struct {
+	Ret        bool   `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
+	Brokerinfo []byte `thrift:"brokerinfo,2" frugal:"2,default,binary" json:"brokerinfo"`
+}
+
+func NewBroGetConfigResponse() *BroGetConfigResponse {
+	return &BroGetConfigResponse{}
+}
+
+func (p *BroGetConfigResponse) InitDefault() {
+}
+
+func (p *BroGetConfigResponse) GetRet() (v bool) {
+	return p.Ret
+}
+
+func (p *BroGetConfigResponse) GetBrokerinfo() (v []byte) {
+	return p.Brokerinfo
+}
+func (p *BroGetConfigResponse) SetRet(val bool) {
+	p.Ret = val
+}
+func (p *BroGetConfigResponse) SetBrokerinfo(val []byte) {
+	p.Brokerinfo = val
+}
+
+func (p *BroGetConfigResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("BroGetConfigResponse(%+v)", *p)
+}
+
+var fieldIDToName_BroGetConfigResponse = map[int16]string{
+	1: "ret",
+	2: "brokerinfo",
+}
+
+type ConGetBrokRequest struct {
+	TopicName string `thrift:"topic_name,1" frugal:"1,default,string" json:"topic_name"`
+	PartName  string `thrift:"part_name,2" frugal:"2,default,string" json:"part_name"`
+	Option    int8   `thrift:"option,3" frugal:"3,default,i8" json:"option"`
+}
+
+func NewConGetBrokRequest() *ConGetBrokRequest {
+	return &ConGetBrokRequest{}
+}
+
+func (p *ConGetBrokRequest) InitDefault() {
+}
+
+func (p *ConGetBrokRequest) GetTopicName() (v string) {
+	return p.TopicName
+}
+
+func (p *ConGetBrokRequest) GetPartName() (v string) {
+	return p.PartName
+}
+
+func (p *ConGetBrokRequest) GetOption() (v int8) {
+	return p.Option
+}
+func (p *ConGetBrokRequest) SetTopicName(val string) {
+	p.TopicName = val
+}
+func (p *ConGetBrokRequest) SetPartName(val string) {
+	p.PartName = val
+}
+func (p *ConGetBrokRequest) SetOption(val int8) {
+	p.Option = val
+}
+
+func (p *ConGetBrokRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ConGetBrokRequest(%+v)", *p)
+}
+
+var fieldIDToName_ConGetBrokRequest = map[int16]string{
+	1: "topic_name",
+	2: "part_name",
+	3: "option",
+}
+
+type ConGetBrokResponse struct {
+	Ret   bool   `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
+	Size  int64  `thrift:"size,2" frugal:"2,default,i64" json:"size"`
+	Broks []byte `thrift:"broks,3" frugal:"3,default,binary" json:"broks"`
+	Parts []byte `thrift:"parts,4" frugal:"4,default,binary" json:"parts"`
+}
+
+func NewConGetBrokResponse() *ConGetBrokResponse {
+	return &ConGetBrokResponse{}
+}
+
+func (p *ConGetBrokResponse) InitDefault() {
+}
+
+func (p *ConGetBrokResponse) GetRet() (v bool) {
+	return p.Ret
+}
+
+func (p *ConGetBrokResponse) GetSize() (v int64) {
+	return p.Size
+}
+
+func (p *ConGetBrokResponse) GetBroks() (v []byte) {
+	return p.Broks
+}
+
+func (p *ConGetBrokResponse) GetParts() (v []byte) {
+	return p.Parts
+}
+func (p *ConGetBrokResponse) SetRet(val bool) {
+	p.Ret = val
+}
+func (p *ConGetBrokResponse) SetSize(val int64) {
+	p.Size = val
+}
+func (p *ConGetBrokResponse) SetBroks(val []byte) {
+	p.Broks = val
+}
+func (p *ConGetBrokResponse) SetParts(val []byte) {
+	p.Parts = val
+}
+
+func (p *ConGetBrokResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ConGetBrokResponse(%+v)", *p)
+}
+
+var fieldIDToName_ConGetBrokResponse = map[int16]string{
+	1: "ret",
+	2: "size",
+	3: "broks",
+	4: "parts",
 }
 
 type ConStartGetBrokRequest struct {
@@ -1696,91 +2162,6 @@ func (p *CreatePartResponse) String() string {
 var fieldIDToName_CreatePartResponse = map[int16]string{
 	1: "ret",
 	2: "err",
-}
-
-type SubRequest struct {
-	Consumer string `thrift:"consumer,1" frugal:"1,default,string" json:"consumer"`
-	Topic    string `thrift:"topic,2" frugal:"2,default,string" json:"topic"`
-	Key      string `thrift:"key,3" frugal:"3,default,string" json:"key"`
-	Option   int8   `thrift:"option,4" frugal:"4,default,i8" json:"option"`
-}
-
-func NewSubRequest() *SubRequest {
-	return &SubRequest{}
-}
-
-func (p *SubRequest) InitDefault() {
-}
-
-func (p *SubRequest) GetConsumer() (v string) {
-	return p.Consumer
-}
-
-func (p *SubRequest) GetTopic() (v string) {
-	return p.Topic
-}
-
-func (p *SubRequest) GetKey() (v string) {
-	return p.Key
-}
-
-func (p *SubRequest) GetOption() (v int8) {
-	return p.Option
-}
-func (p *SubRequest) SetConsumer(val string) {
-	p.Consumer = val
-}
-func (p *SubRequest) SetTopic(val string) {
-	p.Topic = val
-}
-func (p *SubRequest) SetKey(val string) {
-	p.Key = val
-}
-func (p *SubRequest) SetOption(val int8) {
-	p.Option = val
-}
-
-func (p *SubRequest) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("SubRequest(%+v)", *p)
-}
-
-var fieldIDToName_SubRequest = map[int16]string{
-	1: "consumer",
-	2: "topic",
-	3: "key",
-	4: "option",
-}
-
-type SubResponse struct {
-	Ret bool `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
-}
-
-func NewSubResponse() *SubResponse {
-	return &SubResponse{}
-}
-
-func (p *SubResponse) InitDefault() {
-}
-
-func (p *SubResponse) GetRet() (v bool) {
-	return p.Ret
-}
-func (p *SubResponse) SetRet(val bool) {
-	p.Ret = val
-}
-
-func (p *SubResponse) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("SubResponse(%+v)", *p)
-}
-
-var fieldIDToName_SubResponse = map[int16]string{
-	1: "ret",
 }
 
 type UpdatePTPOffsetRequest struct {
@@ -2226,158 +2607,6 @@ var fieldIDToName_GetNewLeaderResponse = map[int16]string{
 	3: "HostPort",
 }
 
-type PubRequest struct {
-	TopicName  string `thrift:"topic_name,1" frugal:"1,default,string" json:"topic_name"`
-	PartName   string `thrift:"part_name,2" frugal:"2,default,string" json:"part_name"`
-	StartIndex int64  `thrift:"start_index,3" frugal:"3,default,i64" json:"start_index"`
-	EndIndex   int64  `thrift:"end_index,4" frugal:"4,default,i64" json:"end_index"`
-	Msg        []byte `thrift:"msg,5" frugal:"5,default,binary" json:"msg"`
-}
-
-func NewPubRequest() *PubRequest {
-	return &PubRequest{}
-}
-
-func (p *PubRequest) InitDefault() {
-}
-
-func (p *PubRequest) GetTopicName() (v string) {
-	return p.TopicName
-}
-
-func (p *PubRequest) GetPartName() (v string) {
-	return p.PartName
-}
-
-func (p *PubRequest) GetStartIndex() (v int64) {
-	return p.StartIndex
-}
-
-func (p *PubRequest) GetEndIndex() (v int64) {
-	return p.EndIndex
-}
-
-func (p *PubRequest) GetMsg() (v []byte) {
-	return p.Msg
-}
-func (p *PubRequest) SetTopicName(val string) {
-	p.TopicName = val
-}
-func (p *PubRequest) SetPartName(val string) {
-	p.PartName = val
-}
-func (p *PubRequest) SetStartIndex(val int64) {
-	p.StartIndex = val
-}
-func (p *PubRequest) SetEndIndex(val int64) {
-	p.EndIndex = val
-}
-func (p *PubRequest) SetMsg(val []byte) {
-	p.Msg = val
-}
-
-func (p *PubRequest) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PubRequest(%+v)", *p)
-}
-
-var fieldIDToName_PubRequest = map[int16]string{
-	1: "topic_name",
-	2: "part_name",
-	3: "start_index",
-	4: "end_index",
-	5: "msg",
-}
-
-type PubResponse struct {
-	Ret bool `thrift:"ret,1" frugal:"1,default,bool" json:"ret"`
-}
-
-func NewPubResponse() *PubResponse {
-	return &PubResponse{}
-}
-
-func (p *PubResponse) InitDefault() {
-}
-
-func (p *PubResponse) GetRet() (v bool) {
-	return p.Ret
-}
-func (p *PubResponse) SetRet(val bool) {
-	p.Ret = val
-}
-
-func (p *PubResponse) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PubResponse(%+v)", *p)
-}
-
-var fieldIDToName_PubResponse = map[int16]string{
-	1: "ret",
-}
-
-type PingPongRequest struct {
-	Ping bool `thrift:"ping,1" frugal:"1,default,bool" json:"ping"`
-}
-
-func NewPingPongRequest() *PingPongRequest {
-	return &PingPongRequest{}
-}
-
-func (p *PingPongRequest) InitDefault() {
-}
-
-func (p *PingPongRequest) GetPing() (v bool) {
-	return p.Ping
-}
-func (p *PingPongRequest) SetPing(val bool) {
-	p.Ping = val
-}
-
-func (p *PingPongRequest) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PingPongRequest(%+v)", *p)
-}
-
-var fieldIDToName_PingPongRequest = map[int16]string{
-	1: "ping",
-}
-
-type PingPongResponse struct {
-	Pong bool `thrift:"pong,1" frugal:"1,default,bool" json:"pong"`
-}
-
-func NewPingPongResponse() *PingPongResponse {
-	return &PingPongResponse{}
-}
-
-func (p *PingPongResponse) InitDefault() {
-}
-
-func (p *PingPongResponse) GetPong() (v bool) {
-	return p.Pong
-}
-func (p *PingPongResponse) SetPong(val bool) {
-	p.Pong = val
-}
-
-func (p *PingPongResponse) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("PingPongResponse(%+v)", *p)
-}
-
-var fieldIDToName_PingPongResponse = map[int16]string{
-	1: "pong",
-}
-
 type Server_Operations interface {
 	Push(ctx context.Context, req *PushRequest) (r *PushResponse, err error)
 
@@ -2389,9 +2618,9 @@ type Server_Operations interface {
 
 	PrepareAccept(ctx context.Context, req *PrepareAcceptRequest) (r *PrepareAcceptResponse, err error)
 
-	CloseAccept(ctx context.Context, req *CloseAcceptRequest) (r *CloseAcceptResponse, err error)
-
 	PrepareSend(ctx context.Context, req *PrepareSendRequest) (r *PrepareSendResponse, err error)
+
+	CloseAccept(ctx context.Context, req *CloseAcceptRequest) (r *CloseAcceptResponse, err error)
 
 	PrepareState(ctx context.Context, req *PrepareStateRequest) (r *PrepareStateResponse, err error)
 
@@ -2784,82 +3013,6 @@ var fieldIDToName_Server_OperationsPrepareAcceptResult = map[int16]string{
 	0: "success",
 }
 
-type Server_OperationsCloseAcceptArgs struct {
-	Req *CloseAcceptRequest `thrift:"req,1" frugal:"1,default,CloseAcceptRequest" json:"req"`
-}
-
-func NewServer_OperationsCloseAcceptArgs() *Server_OperationsCloseAcceptArgs {
-	return &Server_OperationsCloseAcceptArgs{}
-}
-
-func (p *Server_OperationsCloseAcceptArgs) InitDefault() {
-}
-
-var Server_OperationsCloseAcceptArgs_Req_DEFAULT *CloseAcceptRequest
-
-func (p *Server_OperationsCloseAcceptArgs) GetReq() (v *CloseAcceptRequest) {
-	if !p.IsSetReq() {
-		return Server_OperationsCloseAcceptArgs_Req_DEFAULT
-	}
-	return p.Req
-}
-func (p *Server_OperationsCloseAcceptArgs) SetReq(val *CloseAcceptRequest) {
-	p.Req = val
-}
-
-func (p *Server_OperationsCloseAcceptArgs) IsSetReq() bool {
-	return p.Req != nil
-}
-
-func (p *Server_OperationsCloseAcceptArgs) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("Server_OperationsCloseAcceptArgs(%+v)", *p)
-}
-
-var fieldIDToName_Server_OperationsCloseAcceptArgs = map[int16]string{
-	1: "req",
-}
-
-type Server_OperationsCloseAcceptResult struct {
-	Success *CloseAcceptResponse `thrift:"success,0,optional" frugal:"0,optional,CloseAcceptResponse" json:"success,omitempty"`
-}
-
-func NewServer_OperationsCloseAcceptResult() *Server_OperationsCloseAcceptResult {
-	return &Server_OperationsCloseAcceptResult{}
-}
-
-func (p *Server_OperationsCloseAcceptResult) InitDefault() {
-}
-
-var Server_OperationsCloseAcceptResult_Success_DEFAULT *CloseAcceptResponse
-
-func (p *Server_OperationsCloseAcceptResult) GetSuccess() (v *CloseAcceptResponse) {
-	if !p.IsSetSuccess() {
-		return Server_OperationsCloseAcceptResult_Success_DEFAULT
-	}
-	return p.Success
-}
-func (p *Server_OperationsCloseAcceptResult) SetSuccess(x interface{}) {
-	p.Success = x.(*CloseAcceptResponse)
-}
-
-func (p *Server_OperationsCloseAcceptResult) IsSetSuccess() bool {
-	return p.Success != nil
-}
-
-func (p *Server_OperationsCloseAcceptResult) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("Server_OperationsCloseAcceptResult(%+v)", *p)
-}
-
-var fieldIDToName_Server_OperationsCloseAcceptResult = map[int16]string{
-	0: "success",
-}
-
 type Server_OperationsPrepareSendArgs struct {
 	Req *PrepareSendRequest `thrift:"req,1" frugal:"1,default,PrepareSendRequest" json:"req"`
 }
@@ -2933,6 +3086,82 @@ func (p *Server_OperationsPrepareSendResult) String() string {
 }
 
 var fieldIDToName_Server_OperationsPrepareSendResult = map[int16]string{
+	0: "success",
+}
+
+type Server_OperationsCloseAcceptArgs struct {
+	Req *CloseAcceptRequest `thrift:"req,1" frugal:"1,default,CloseAcceptRequest" json:"req"`
+}
+
+func NewServer_OperationsCloseAcceptArgs() *Server_OperationsCloseAcceptArgs {
+	return &Server_OperationsCloseAcceptArgs{}
+}
+
+func (p *Server_OperationsCloseAcceptArgs) InitDefault() {
+}
+
+var Server_OperationsCloseAcceptArgs_Req_DEFAULT *CloseAcceptRequest
+
+func (p *Server_OperationsCloseAcceptArgs) GetReq() (v *CloseAcceptRequest) {
+	if !p.IsSetReq() {
+		return Server_OperationsCloseAcceptArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *Server_OperationsCloseAcceptArgs) SetReq(val *CloseAcceptRequest) {
+	p.Req = val
+}
+
+func (p *Server_OperationsCloseAcceptArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *Server_OperationsCloseAcceptArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Server_OperationsCloseAcceptArgs(%+v)", *p)
+}
+
+var fieldIDToName_Server_OperationsCloseAcceptArgs = map[int16]string{
+	1: "req",
+}
+
+type Server_OperationsCloseAcceptResult struct {
+	Success *CloseAcceptResponse `thrift:"success,0,optional" frugal:"0,optional,CloseAcceptResponse" json:"success,omitempty"`
+}
+
+func NewServer_OperationsCloseAcceptResult() *Server_OperationsCloseAcceptResult {
+	return &Server_OperationsCloseAcceptResult{}
+}
+
+func (p *Server_OperationsCloseAcceptResult) InitDefault() {
+}
+
+var Server_OperationsCloseAcceptResult_Success_DEFAULT *CloseAcceptResponse
+
+func (p *Server_OperationsCloseAcceptResult) GetSuccess() (v *CloseAcceptResponse) {
+	if !p.IsSetSuccess() {
+		return Server_OperationsCloseAcceptResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *Server_OperationsCloseAcceptResult) SetSuccess(x interface{}) {
+	p.Success = x.(*CloseAcceptResponse)
+}
+
+func (p *Server_OperationsCloseAcceptResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *Server_OperationsCloseAcceptResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Server_OperationsCloseAcceptResult(%+v)", *p)
+}
+
+var fieldIDToName_Server_OperationsCloseAcceptResult = map[int16]string{
 	0: "success",
 }
 
@@ -3316,6 +3545,164 @@ var fieldIDToName_Server_OperationsCloseFetchPartitionResult = map[int16]string{
 	0: "success",
 }
 
+type Client_Operations interface {
+	Pub(ctx context.Context, req *PubRequest) (r *PubResponse, err error)
+
+	Pingpong(ctx context.Context, req *PingPongRequest) (r *PingPongResponse, err error)
+}
+
+type Client_OperationsPubArgs struct {
+	Req *PubRequest `thrift:"req,1" frugal:"1,default,PubRequest" json:"req"`
+}
+
+func NewClient_OperationsPubArgs() *Client_OperationsPubArgs {
+	return &Client_OperationsPubArgs{}
+}
+
+func (p *Client_OperationsPubArgs) InitDefault() {
+}
+
+var Client_OperationsPubArgs_Req_DEFAULT *PubRequest
+
+func (p *Client_OperationsPubArgs) GetReq() (v *PubRequest) {
+	if !p.IsSetReq() {
+		return Client_OperationsPubArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *Client_OperationsPubArgs) SetReq(val *PubRequest) {
+	p.Req = val
+}
+
+func (p *Client_OperationsPubArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *Client_OperationsPubArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Client_OperationsPubArgs(%+v)", *p)
+}
+
+var fieldIDToName_Client_OperationsPubArgs = map[int16]string{
+	1: "req",
+}
+
+type Client_OperationsPubResult struct {
+	Success *PubResponse `thrift:"success,0,optional" frugal:"0,optional,PubResponse" json:"success,omitempty"`
+}
+
+func NewClient_OperationsPubResult() *Client_OperationsPubResult {
+	return &Client_OperationsPubResult{}
+}
+
+func (p *Client_OperationsPubResult) InitDefault() {
+}
+
+var Client_OperationsPubResult_Success_DEFAULT *PubResponse
+
+func (p *Client_OperationsPubResult) GetSuccess() (v *PubResponse) {
+	if !p.IsSetSuccess() {
+		return Client_OperationsPubResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *Client_OperationsPubResult) SetSuccess(x interface{}) {
+	p.Success = x.(*PubResponse)
+}
+
+func (p *Client_OperationsPubResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *Client_OperationsPubResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Client_OperationsPubResult(%+v)", *p)
+}
+
+var fieldIDToName_Client_OperationsPubResult = map[int16]string{
+	0: "success",
+}
+
+type Client_OperationsPingpongArgs struct {
+	Req *PingPongRequest `thrift:"req,1" frugal:"1,default,PingPongRequest" json:"req"`
+}
+
+func NewClient_OperationsPingpongArgs() *Client_OperationsPingpongArgs {
+	return &Client_OperationsPingpongArgs{}
+}
+
+func (p *Client_OperationsPingpongArgs) InitDefault() {
+}
+
+var Client_OperationsPingpongArgs_Req_DEFAULT *PingPongRequest
+
+func (p *Client_OperationsPingpongArgs) GetReq() (v *PingPongRequest) {
+	if !p.IsSetReq() {
+		return Client_OperationsPingpongArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *Client_OperationsPingpongArgs) SetReq(val *PingPongRequest) {
+	p.Req = val
+}
+
+func (p *Client_OperationsPingpongArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *Client_OperationsPingpongArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Client_OperationsPingpongArgs(%+v)", *p)
+}
+
+var fieldIDToName_Client_OperationsPingpongArgs = map[int16]string{
+	1: "req",
+}
+
+type Client_OperationsPingpongResult struct {
+	Success *PingPongResponse `thrift:"success,0,optional" frugal:"0,optional,PingPongResponse" json:"success,omitempty"`
+}
+
+func NewClient_OperationsPingpongResult() *Client_OperationsPingpongResult {
+	return &Client_OperationsPingpongResult{}
+}
+
+func (p *Client_OperationsPingpongResult) InitDefault() {
+}
+
+var Client_OperationsPingpongResult_Success_DEFAULT *PingPongResponse
+
+func (p *Client_OperationsPingpongResult) GetSuccess() (v *PingPongResponse) {
+	if !p.IsSetSuccess() {
+		return Client_OperationsPingpongResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *Client_OperationsPingpongResult) SetSuccess(x interface{}) {
+	p.Success = x.(*PingPongResponse)
+}
+
+func (p *Client_OperationsPingpongResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *Client_OperationsPingpongResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Client_OperationsPingpongResult(%+v)", *p)
+}
+
+var fieldIDToName_Client_OperationsPingpongResult = map[int16]string{
+	0: "success",
+}
+
 type ZkServer_Operations interface {
 	Sub(ctx context.Context, req *SubRequest) (r *SubResponse, err error)
 
@@ -3323,23 +3710,23 @@ type ZkServer_Operations interface {
 
 	CreatePart(ctx context.Context, req *CreatePartRequest) (r *CreatePartResponse, err error)
 
-	ProGetBroker(ctx context.Context, req *ProGetBrokRequest) (r *ProGetBrokResponse, err error)
-
 	SetPartitionState(ctx context.Context, req *SetPartitionStateRequest) (r *SetPartitionStateResponse, err error)
-
-	ConStartGetBroker(ctx context.Context, req *ConStartGetBrokRequest) (r *ConStartGetBrokResponse, err error)
 
 	BroInfo(ctx context.Context, req *BroInfoRequest) (r *BroInfoResponse, err error)
 
-	UpdatePTPOffset(ctx context.Context, req *UpdatePTPOffsetRequest) (r *UpdatePTPOffsetResponse, err error)
+	ProGetBroker(ctx context.Context, req *ProGetBrokRequest) (r *ProGetBrokResponse, err error)
 
-	UpdateDup(ctx context.Context, req *UpdateDupRequest) (r *UpdateDupResponse, err error)
+	ConStartGetBroker(ctx context.Context, req *ConStartGetBrokRequest) (r *ConStartGetBrokResponse, err error)
+
+	BroGetConfig(ctx context.Context, req *BroGetConfigRequest) (r *BroGetConfigResponse, err error)
 
 	BecomeLeader(ctx context.Context, req *BecomeLeaderRequest) (r *BecomeLeaderResponse, err error)
 
 	GetNewLeader(ctx context.Context, req *GetNewLeaderRequest) (r *GetNewLeaderResponse, err error)
 
-	BroGetConfig(ctx context.Context, req *BroGetConfigRequest) (r *BroGetConfigResponse, err error)
+	UpdatePTPOffset(ctx context.Context, req *UpdatePTPOffsetRequest) (r *UpdatePTPOffsetResponse, err error)
+
+	UpdateDup(ctx context.Context, req *UpdateDupRequest) (r *UpdateDupResponse, err error)
 }
 
 type ZkServer_OperationsSubArgs struct {
@@ -3570,82 +3957,6 @@ var fieldIDToName_ZkServer_OperationsCreatePartResult = map[int16]string{
 	0: "success",
 }
 
-type ZkServer_OperationsProGetBrokerArgs struct {
-	Req *ProGetBrokRequest `thrift:"req,1" frugal:"1,default,ProGetBrokRequest" json:"req"`
-}
-
-func NewZkServer_OperationsProGetBrokerArgs() *ZkServer_OperationsProGetBrokerArgs {
-	return &ZkServer_OperationsProGetBrokerArgs{}
-}
-
-func (p *ZkServer_OperationsProGetBrokerArgs) InitDefault() {
-}
-
-var ZkServer_OperationsProGetBrokerArgs_Req_DEFAULT *ProGetBrokRequest
-
-func (p *ZkServer_OperationsProGetBrokerArgs) GetReq() (v *ProGetBrokRequest) {
-	if !p.IsSetReq() {
-		return ZkServer_OperationsProGetBrokerArgs_Req_DEFAULT
-	}
-	return p.Req
-}
-func (p *ZkServer_OperationsProGetBrokerArgs) SetReq(val *ProGetBrokRequest) {
-	p.Req = val
-}
-
-func (p *ZkServer_OperationsProGetBrokerArgs) IsSetReq() bool {
-	return p.Req != nil
-}
-
-func (p *ZkServer_OperationsProGetBrokerArgs) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("ZkServer_OperationsProGetBrokerArgs(%+v)", *p)
-}
-
-var fieldIDToName_ZkServer_OperationsProGetBrokerArgs = map[int16]string{
-	1: "req",
-}
-
-type ZkServer_OperationsProGetBrokerResult struct {
-	Success *ProGetBrokResponse `thrift:"success,0,optional" frugal:"0,optional,ProGetBrokResponse" json:"success,omitempty"`
-}
-
-func NewZkServer_OperationsProGetBrokerResult() *ZkServer_OperationsProGetBrokerResult {
-	return &ZkServer_OperationsProGetBrokerResult{}
-}
-
-func (p *ZkServer_OperationsProGetBrokerResult) InitDefault() {
-}
-
-var ZkServer_OperationsProGetBrokerResult_Success_DEFAULT *ProGetBrokResponse
-
-func (p *ZkServer_OperationsProGetBrokerResult) GetSuccess() (v *ProGetBrokResponse) {
-	if !p.IsSetSuccess() {
-		return ZkServer_OperationsProGetBrokerResult_Success_DEFAULT
-	}
-	return p.Success
-}
-func (p *ZkServer_OperationsProGetBrokerResult) SetSuccess(x interface{}) {
-	p.Success = x.(*ProGetBrokResponse)
-}
-
-func (p *ZkServer_OperationsProGetBrokerResult) IsSetSuccess() bool {
-	return p.Success != nil
-}
-
-func (p *ZkServer_OperationsProGetBrokerResult) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("ZkServer_OperationsProGetBrokerResult(%+v)", *p)
-}
-
-var fieldIDToName_ZkServer_OperationsProGetBrokerResult = map[int16]string{
-	0: "success",
-}
-
 type ZkServer_OperationsSetPartitionStateArgs struct {
 	Req *SetPartitionStateRequest `thrift:"req,1" frugal:"1,default,SetPartitionStateRequest" json:"req"`
 }
@@ -3719,82 +4030,6 @@ func (p *ZkServer_OperationsSetPartitionStateResult) String() string {
 }
 
 var fieldIDToName_ZkServer_OperationsSetPartitionStateResult = map[int16]string{
-	0: "success",
-}
-
-type ZkServer_OperationsConStartGetBrokerArgs struct {
-	Req *ConStartGetBrokRequest `thrift:"req,1" frugal:"1,default,ConStartGetBrokRequest" json:"req"`
-}
-
-func NewZkServer_OperationsConStartGetBrokerArgs() *ZkServer_OperationsConStartGetBrokerArgs {
-	return &ZkServer_OperationsConStartGetBrokerArgs{}
-}
-
-func (p *ZkServer_OperationsConStartGetBrokerArgs) InitDefault() {
-}
-
-var ZkServer_OperationsConStartGetBrokerArgs_Req_DEFAULT *ConStartGetBrokRequest
-
-func (p *ZkServer_OperationsConStartGetBrokerArgs) GetReq() (v *ConStartGetBrokRequest) {
-	if !p.IsSetReq() {
-		return ZkServer_OperationsConStartGetBrokerArgs_Req_DEFAULT
-	}
-	return p.Req
-}
-func (p *ZkServer_OperationsConStartGetBrokerArgs) SetReq(val *ConStartGetBrokRequest) {
-	p.Req = val
-}
-
-func (p *ZkServer_OperationsConStartGetBrokerArgs) IsSetReq() bool {
-	return p.Req != nil
-}
-
-func (p *ZkServer_OperationsConStartGetBrokerArgs) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("ZkServer_OperationsConStartGetBrokerArgs(%+v)", *p)
-}
-
-var fieldIDToName_ZkServer_OperationsConStartGetBrokerArgs = map[int16]string{
-	1: "req",
-}
-
-type ZkServer_OperationsConStartGetBrokerResult struct {
-	Success *ConStartGetBrokResponse `thrift:"success,0,optional" frugal:"0,optional,ConStartGetBrokResponse" json:"success,omitempty"`
-}
-
-func NewZkServer_OperationsConStartGetBrokerResult() *ZkServer_OperationsConStartGetBrokerResult {
-	return &ZkServer_OperationsConStartGetBrokerResult{}
-}
-
-func (p *ZkServer_OperationsConStartGetBrokerResult) InitDefault() {
-}
-
-var ZkServer_OperationsConStartGetBrokerResult_Success_DEFAULT *ConStartGetBrokResponse
-
-func (p *ZkServer_OperationsConStartGetBrokerResult) GetSuccess() (v *ConStartGetBrokResponse) {
-	if !p.IsSetSuccess() {
-		return ZkServer_OperationsConStartGetBrokerResult_Success_DEFAULT
-	}
-	return p.Success
-}
-func (p *ZkServer_OperationsConStartGetBrokerResult) SetSuccess(x interface{}) {
-	p.Success = x.(*ConStartGetBrokResponse)
-}
-
-func (p *ZkServer_OperationsConStartGetBrokerResult) IsSetSuccess() bool {
-	return p.Success != nil
-}
-
-func (p *ZkServer_OperationsConStartGetBrokerResult) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("ZkServer_OperationsConStartGetBrokerResult(%+v)", *p)
-}
-
-var fieldIDToName_ZkServer_OperationsConStartGetBrokerResult = map[int16]string{
 	0: "success",
 }
 
@@ -3874,155 +4109,231 @@ var fieldIDToName_ZkServer_OperationsBroInfoResult = map[int16]string{
 	0: "success",
 }
 
-type ZkServer_OperationsUpdatePTPOffsetArgs struct {
-	Req *UpdatePTPOffsetRequest `thrift:"req,1" frugal:"1,default,UpdatePTPOffsetRequest" json:"req"`
+type ZkServer_OperationsProGetBrokerArgs struct {
+	Req *ProGetBrokRequest `thrift:"req,1" frugal:"1,default,ProGetBrokRequest" json:"req"`
 }
 
-func NewZkServer_OperationsUpdatePTPOffsetArgs() *ZkServer_OperationsUpdatePTPOffsetArgs {
-	return &ZkServer_OperationsUpdatePTPOffsetArgs{}
+func NewZkServer_OperationsProGetBrokerArgs() *ZkServer_OperationsProGetBrokerArgs {
+	return &ZkServer_OperationsProGetBrokerArgs{}
 }
 
-func (p *ZkServer_OperationsUpdatePTPOffsetArgs) InitDefault() {
+func (p *ZkServer_OperationsProGetBrokerArgs) InitDefault() {
 }
 
-var ZkServer_OperationsUpdatePTPOffsetArgs_Req_DEFAULT *UpdatePTPOffsetRequest
+var ZkServer_OperationsProGetBrokerArgs_Req_DEFAULT *ProGetBrokRequest
 
-func (p *ZkServer_OperationsUpdatePTPOffsetArgs) GetReq() (v *UpdatePTPOffsetRequest) {
+func (p *ZkServer_OperationsProGetBrokerArgs) GetReq() (v *ProGetBrokRequest) {
 	if !p.IsSetReq() {
-		return ZkServer_OperationsUpdatePTPOffsetArgs_Req_DEFAULT
+		return ZkServer_OperationsProGetBrokerArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *ZkServer_OperationsUpdatePTPOffsetArgs) SetReq(val *UpdatePTPOffsetRequest) {
+func (p *ZkServer_OperationsProGetBrokerArgs) SetReq(val *ProGetBrokRequest) {
 	p.Req = val
 }
 
-func (p *ZkServer_OperationsUpdatePTPOffsetArgs) IsSetReq() bool {
+func (p *ZkServer_OperationsProGetBrokerArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *ZkServer_OperationsUpdatePTPOffsetArgs) String() string {
+func (p *ZkServer_OperationsProGetBrokerArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ZkServer_OperationsUpdatePTPOffsetArgs(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsProGetBrokerArgs(%+v)", *p)
 }
 
-var fieldIDToName_ZkServer_OperationsUpdatePTPOffsetArgs = map[int16]string{
+var fieldIDToName_ZkServer_OperationsProGetBrokerArgs = map[int16]string{
 	1: "req",
 }
 
-type ZkServer_OperationsUpdatePTPOffsetResult struct {
-	Success *UpdatePTPOffsetResponse `thrift:"success,0,optional" frugal:"0,optional,UpdatePTPOffsetResponse" json:"success,omitempty"`
+type ZkServer_OperationsProGetBrokerResult struct {
+	Success *ProGetBrokResponse `thrift:"success,0,optional" frugal:"0,optional,ProGetBrokResponse" json:"success,omitempty"`
 }
 
-func NewZkServer_OperationsUpdatePTPOffsetResult() *ZkServer_OperationsUpdatePTPOffsetResult {
-	return &ZkServer_OperationsUpdatePTPOffsetResult{}
+func NewZkServer_OperationsProGetBrokerResult() *ZkServer_OperationsProGetBrokerResult {
+	return &ZkServer_OperationsProGetBrokerResult{}
 }
 
-func (p *ZkServer_OperationsUpdatePTPOffsetResult) InitDefault() {
+func (p *ZkServer_OperationsProGetBrokerResult) InitDefault() {
 }
 
-var ZkServer_OperationsUpdatePTPOffsetResult_Success_DEFAULT *UpdatePTPOffsetResponse
+var ZkServer_OperationsProGetBrokerResult_Success_DEFAULT *ProGetBrokResponse
 
-func (p *ZkServer_OperationsUpdatePTPOffsetResult) GetSuccess() (v *UpdatePTPOffsetResponse) {
+func (p *ZkServer_OperationsProGetBrokerResult) GetSuccess() (v *ProGetBrokResponse) {
 	if !p.IsSetSuccess() {
-		return ZkServer_OperationsUpdatePTPOffsetResult_Success_DEFAULT
+		return ZkServer_OperationsProGetBrokerResult_Success_DEFAULT
 	}
 	return p.Success
 }
-func (p *ZkServer_OperationsUpdatePTPOffsetResult) SetSuccess(x interface{}) {
-	p.Success = x.(*UpdatePTPOffsetResponse)
+func (p *ZkServer_OperationsProGetBrokerResult) SetSuccess(x interface{}) {
+	p.Success = x.(*ProGetBrokResponse)
 }
 
-func (p *ZkServer_OperationsUpdatePTPOffsetResult) IsSetSuccess() bool {
+func (p *ZkServer_OperationsProGetBrokerResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ZkServer_OperationsUpdatePTPOffsetResult) String() string {
+func (p *ZkServer_OperationsProGetBrokerResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ZkServer_OperationsUpdatePTPOffsetResult(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsProGetBrokerResult(%+v)", *p)
 }
 
-var fieldIDToName_ZkServer_OperationsUpdatePTPOffsetResult = map[int16]string{
+var fieldIDToName_ZkServer_OperationsProGetBrokerResult = map[int16]string{
 	0: "success",
 }
 
-type ZkServer_OperationsUpdateDupArgs struct {
-	Req *UpdateDupRequest `thrift:"req,1" frugal:"1,default,UpdateDupRequest" json:"req"`
+type ZkServer_OperationsConStartGetBrokerArgs struct {
+	Req *ConStartGetBrokRequest `thrift:"req,1" frugal:"1,default,ConStartGetBrokRequest" json:"req"`
 }
 
-func NewZkServer_OperationsUpdateDupArgs() *ZkServer_OperationsUpdateDupArgs {
-	return &ZkServer_OperationsUpdateDupArgs{}
+func NewZkServer_OperationsConStartGetBrokerArgs() *ZkServer_OperationsConStartGetBrokerArgs {
+	return &ZkServer_OperationsConStartGetBrokerArgs{}
 }
 
-func (p *ZkServer_OperationsUpdateDupArgs) InitDefault() {
+func (p *ZkServer_OperationsConStartGetBrokerArgs) InitDefault() {
 }
 
-var ZkServer_OperationsUpdateDupArgs_Req_DEFAULT *UpdateDupRequest
+var ZkServer_OperationsConStartGetBrokerArgs_Req_DEFAULT *ConStartGetBrokRequest
 
-func (p *ZkServer_OperationsUpdateDupArgs) GetReq() (v *UpdateDupRequest) {
+func (p *ZkServer_OperationsConStartGetBrokerArgs) GetReq() (v *ConStartGetBrokRequest) {
 	if !p.IsSetReq() {
-		return ZkServer_OperationsUpdateDupArgs_Req_DEFAULT
+		return ZkServer_OperationsConStartGetBrokerArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *ZkServer_OperationsUpdateDupArgs) SetReq(val *UpdateDupRequest) {
+func (p *ZkServer_OperationsConStartGetBrokerArgs) SetReq(val *ConStartGetBrokRequest) {
 	p.Req = val
 }
 
-func (p *ZkServer_OperationsUpdateDupArgs) IsSetReq() bool {
+func (p *ZkServer_OperationsConStartGetBrokerArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *ZkServer_OperationsUpdateDupArgs) String() string {
+func (p *ZkServer_OperationsConStartGetBrokerArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ZkServer_OperationsUpdateDupArgs(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsConStartGetBrokerArgs(%+v)", *p)
 }
 
-var fieldIDToName_ZkServer_OperationsUpdateDupArgs = map[int16]string{
+var fieldIDToName_ZkServer_OperationsConStartGetBrokerArgs = map[int16]string{
 	1: "req",
 }
 
-type ZkServer_OperationsUpdateDupResult struct {
-	Success *UpdateDupResponse `thrift:"success,0,optional" frugal:"0,optional,UpdateDupResponse" json:"success,omitempty"`
+type ZkServer_OperationsConStartGetBrokerResult struct {
+	Success *ConStartGetBrokResponse `thrift:"success,0,optional" frugal:"0,optional,ConStartGetBrokResponse" json:"success,omitempty"`
 }
 
-func NewZkServer_OperationsUpdateDupResult() *ZkServer_OperationsUpdateDupResult {
-	return &ZkServer_OperationsUpdateDupResult{}
+func NewZkServer_OperationsConStartGetBrokerResult() *ZkServer_OperationsConStartGetBrokerResult {
+	return &ZkServer_OperationsConStartGetBrokerResult{}
 }
 
-func (p *ZkServer_OperationsUpdateDupResult) InitDefault() {
+func (p *ZkServer_OperationsConStartGetBrokerResult) InitDefault() {
 }
 
-var ZkServer_OperationsUpdateDupResult_Success_DEFAULT *UpdateDupResponse
+var ZkServer_OperationsConStartGetBrokerResult_Success_DEFAULT *ConStartGetBrokResponse
 
-func (p *ZkServer_OperationsUpdateDupResult) GetSuccess() (v *UpdateDupResponse) {
+func (p *ZkServer_OperationsConStartGetBrokerResult) GetSuccess() (v *ConStartGetBrokResponse) {
 	if !p.IsSetSuccess() {
-		return ZkServer_OperationsUpdateDupResult_Success_DEFAULT
+		return ZkServer_OperationsConStartGetBrokerResult_Success_DEFAULT
 	}
 	return p.Success
 }
-func (p *ZkServer_OperationsUpdateDupResult) SetSuccess(x interface{}) {
-	p.Success = x.(*UpdateDupResponse)
+func (p *ZkServer_OperationsConStartGetBrokerResult) SetSuccess(x interface{}) {
+	p.Success = x.(*ConStartGetBrokResponse)
 }
 
-func (p *ZkServer_OperationsUpdateDupResult) IsSetSuccess() bool {
+func (p *ZkServer_OperationsConStartGetBrokerResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ZkServer_OperationsUpdateDupResult) String() string {
+func (p *ZkServer_OperationsConStartGetBrokerResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ZkServer_OperationsUpdateDupResult(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsConStartGetBrokerResult(%+v)", *p)
 }
 
-var fieldIDToName_ZkServer_OperationsUpdateDupResult = map[int16]string{
+var fieldIDToName_ZkServer_OperationsConStartGetBrokerResult = map[int16]string{
+	0: "success",
+}
+
+type ZkServer_OperationsBroGetConfigArgs struct {
+	Req *BroGetConfigRequest `thrift:"req,1" frugal:"1,default,BroGetConfigRequest" json:"req"`
+}
+
+func NewZkServer_OperationsBroGetConfigArgs() *ZkServer_OperationsBroGetConfigArgs {
+	return &ZkServer_OperationsBroGetConfigArgs{}
+}
+
+func (p *ZkServer_OperationsBroGetConfigArgs) InitDefault() {
+}
+
+var ZkServer_OperationsBroGetConfigArgs_Req_DEFAULT *BroGetConfigRequest
+
+func (p *ZkServer_OperationsBroGetConfigArgs) GetReq() (v *BroGetConfigRequest) {
+	if !p.IsSetReq() {
+		return ZkServer_OperationsBroGetConfigArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *ZkServer_OperationsBroGetConfigArgs) SetReq(val *BroGetConfigRequest) {
+	p.Req = val
+}
+
+func (p *ZkServer_OperationsBroGetConfigArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *ZkServer_OperationsBroGetConfigArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ZkServer_OperationsBroGetConfigArgs(%+v)", *p)
+}
+
+var fieldIDToName_ZkServer_OperationsBroGetConfigArgs = map[int16]string{
+	1: "req",
+}
+
+type ZkServer_OperationsBroGetConfigResult struct {
+	Success *BroGetConfigResponse `thrift:"success,0,optional" frugal:"0,optional,BroGetConfigResponse" json:"success,omitempty"`
+}
+
+func NewZkServer_OperationsBroGetConfigResult() *ZkServer_OperationsBroGetConfigResult {
+	return &ZkServer_OperationsBroGetConfigResult{}
+}
+
+func (p *ZkServer_OperationsBroGetConfigResult) InitDefault() {
+}
+
+var ZkServer_OperationsBroGetConfigResult_Success_DEFAULT *BroGetConfigResponse
+
+func (p *ZkServer_OperationsBroGetConfigResult) GetSuccess() (v *BroGetConfigResponse) {
+	if !p.IsSetSuccess() {
+		return ZkServer_OperationsBroGetConfigResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *ZkServer_OperationsBroGetConfigResult) SetSuccess(x interface{}) {
+	p.Success = x.(*BroGetConfigResponse)
+}
+
+func (p *ZkServer_OperationsBroGetConfigResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *ZkServer_OperationsBroGetConfigResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("ZkServer_OperationsBroGetConfigResult(%+v)", *p)
+}
+
+var fieldIDToName_ZkServer_OperationsBroGetConfigResult = map[int16]string{
 	0: "success",
 }
 
@@ -4178,236 +4489,154 @@ var fieldIDToName_ZkServer_OperationsGetNewLeaderResult = map[int16]string{
 	0: "success",
 }
 
-type ZkServer_OperationsBroGetConfigArgs struct {
-	Req *BroGetConfigRequest `thrift:"req,1" frugal:"1,default,BroGetConfigRequest" json:"req"`
+type ZkServer_OperationsUpdatePTPOffsetArgs struct {
+	Req *UpdatePTPOffsetRequest `thrift:"req,1" frugal:"1,default,UpdatePTPOffsetRequest" json:"req"`
 }
 
-func NewZkServer_OperationsBroGetConfigArgs() *ZkServer_OperationsBroGetConfigArgs {
-	return &ZkServer_OperationsBroGetConfigArgs{}
+func NewZkServer_OperationsUpdatePTPOffsetArgs() *ZkServer_OperationsUpdatePTPOffsetArgs {
+	return &ZkServer_OperationsUpdatePTPOffsetArgs{}
 }
 
-func (p *ZkServer_OperationsBroGetConfigArgs) InitDefault() {
+func (p *ZkServer_OperationsUpdatePTPOffsetArgs) InitDefault() {
 }
 
-var ZkServer_OperationsBroGetConfigArgs_Req_DEFAULT *BroGetConfigRequest
+var ZkServer_OperationsUpdatePTPOffsetArgs_Req_DEFAULT *UpdatePTPOffsetRequest
 
-func (p *ZkServer_OperationsBroGetConfigArgs) GetReq() (v *BroGetConfigRequest) {
+func (p *ZkServer_OperationsUpdatePTPOffsetArgs) GetReq() (v *UpdatePTPOffsetRequest) {
 	if !p.IsSetReq() {
-		return ZkServer_OperationsBroGetConfigArgs_Req_DEFAULT
+		return ZkServer_OperationsUpdatePTPOffsetArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *ZkServer_OperationsBroGetConfigArgs) SetReq(val *BroGetConfigRequest) {
+func (p *ZkServer_OperationsUpdatePTPOffsetArgs) SetReq(val *UpdatePTPOffsetRequest) {
 	p.Req = val
 }
 
-func (p *ZkServer_OperationsBroGetConfigArgs) IsSetReq() bool {
+func (p *ZkServer_OperationsUpdatePTPOffsetArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *ZkServer_OperationsBroGetConfigArgs) String() string {
+func (p *ZkServer_OperationsUpdatePTPOffsetArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ZkServer_OperationsBroGetConfigArgs(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsUpdatePTPOffsetArgs(%+v)", *p)
 }
 
-var fieldIDToName_ZkServer_OperationsBroGetConfigArgs = map[int16]string{
+var fieldIDToName_ZkServer_OperationsUpdatePTPOffsetArgs = map[int16]string{
 	1: "req",
 }
 
-type ZkServer_OperationsBroGetConfigResult struct {
-	Success *BroGetConfigResponse `thrift:"success,0,optional" frugal:"0,optional,BroGetConfigResponse" json:"success,omitempty"`
+type ZkServer_OperationsUpdatePTPOffsetResult struct {
+	Success *UpdatePTPOffsetResponse `thrift:"success,0,optional" frugal:"0,optional,UpdatePTPOffsetResponse" json:"success,omitempty"`
 }
 
-func NewZkServer_OperationsBroGetConfigResult() *ZkServer_OperationsBroGetConfigResult {
-	return &ZkServer_OperationsBroGetConfigResult{}
+func NewZkServer_OperationsUpdatePTPOffsetResult() *ZkServer_OperationsUpdatePTPOffsetResult {
+	return &ZkServer_OperationsUpdatePTPOffsetResult{}
 }
 
-func (p *ZkServer_OperationsBroGetConfigResult) InitDefault() {
+func (p *ZkServer_OperationsUpdatePTPOffsetResult) InitDefault() {
 }
 
-var ZkServer_OperationsBroGetConfigResult_Success_DEFAULT *BroGetConfigResponse
+var ZkServer_OperationsUpdatePTPOffsetResult_Success_DEFAULT *UpdatePTPOffsetResponse
 
-func (p *ZkServer_OperationsBroGetConfigResult) GetSuccess() (v *BroGetConfigResponse) {
+func (p *ZkServer_OperationsUpdatePTPOffsetResult) GetSuccess() (v *UpdatePTPOffsetResponse) {
 	if !p.IsSetSuccess() {
-		return ZkServer_OperationsBroGetConfigResult_Success_DEFAULT
+		return ZkServer_OperationsUpdatePTPOffsetResult_Success_DEFAULT
 	}
 	return p.Success
 }
-func (p *ZkServer_OperationsBroGetConfigResult) SetSuccess(x interface{}) {
-	p.Success = x.(*BroGetConfigResponse)
+func (p *ZkServer_OperationsUpdatePTPOffsetResult) SetSuccess(x interface{}) {
+	p.Success = x.(*UpdatePTPOffsetResponse)
 }
 
-func (p *ZkServer_OperationsBroGetConfigResult) IsSetSuccess() bool {
+func (p *ZkServer_OperationsUpdatePTPOffsetResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ZkServer_OperationsBroGetConfigResult) String() string {
+func (p *ZkServer_OperationsUpdatePTPOffsetResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ZkServer_OperationsBroGetConfigResult(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsUpdatePTPOffsetResult(%+v)", *p)
 }
 
-var fieldIDToName_ZkServer_OperationsBroGetConfigResult = map[int16]string{
+var fieldIDToName_ZkServer_OperationsUpdatePTPOffsetResult = map[int16]string{
 	0: "success",
 }
 
-type Client_Operations interface {
-	Pub(ctx context.Context, req *PubRequest) (r *PubResponse, err error)
-
-	Pingpong(ctx context.Context, req *PingPongRequest) (r *PingPongResponse, err error)
+type ZkServer_OperationsUpdateDupArgs struct {
+	Req *UpdateDupRequest `thrift:"req,1" frugal:"1,default,UpdateDupRequest" json:"req"`
 }
 
-type Client_OperationsPubArgs struct {
-	Req *PubRequest `thrift:"req,1" frugal:"1,default,PubRequest" json:"req"`
+func NewZkServer_OperationsUpdateDupArgs() *ZkServer_OperationsUpdateDupArgs {
+	return &ZkServer_OperationsUpdateDupArgs{}
 }
 
-func NewClient_OperationsPubArgs() *Client_OperationsPubArgs {
-	return &Client_OperationsPubArgs{}
+func (p *ZkServer_OperationsUpdateDupArgs) InitDefault() {
 }
 
-func (p *Client_OperationsPubArgs) InitDefault() {
-}
+var ZkServer_OperationsUpdateDupArgs_Req_DEFAULT *UpdateDupRequest
 
-var Client_OperationsPubArgs_Req_DEFAULT *PubRequest
-
-func (p *Client_OperationsPubArgs) GetReq() (v *PubRequest) {
+func (p *ZkServer_OperationsUpdateDupArgs) GetReq() (v *UpdateDupRequest) {
 	if !p.IsSetReq() {
-		return Client_OperationsPubArgs_Req_DEFAULT
+		return ZkServer_OperationsUpdateDupArgs_Req_DEFAULT
 	}
 	return p.Req
 }
-func (p *Client_OperationsPubArgs) SetReq(val *PubRequest) {
+func (p *ZkServer_OperationsUpdateDupArgs) SetReq(val *UpdateDupRequest) {
 	p.Req = val
 }
 
-func (p *Client_OperationsPubArgs) IsSetReq() bool {
+func (p *ZkServer_OperationsUpdateDupArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *Client_OperationsPubArgs) String() string {
+func (p *ZkServer_OperationsUpdateDupArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("Client_OperationsPubArgs(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsUpdateDupArgs(%+v)", *p)
 }
 
-var fieldIDToName_Client_OperationsPubArgs = map[int16]string{
+var fieldIDToName_ZkServer_OperationsUpdateDupArgs = map[int16]string{
 	1: "req",
 }
 
-type Client_OperationsPubResult struct {
-	Success *PubResponse `thrift:"success,0,optional" frugal:"0,optional,PubResponse" json:"success,omitempty"`
+type ZkServer_OperationsUpdateDupResult struct {
+	Success *UpdateDupResponse `thrift:"success,0,optional" frugal:"0,optional,UpdateDupResponse" json:"success,omitempty"`
 }
 
-func NewClient_OperationsPubResult() *Client_OperationsPubResult {
-	return &Client_OperationsPubResult{}
+func NewZkServer_OperationsUpdateDupResult() *ZkServer_OperationsUpdateDupResult {
+	return &ZkServer_OperationsUpdateDupResult{}
 }
 
-func (p *Client_OperationsPubResult) InitDefault() {
+func (p *ZkServer_OperationsUpdateDupResult) InitDefault() {
 }
 
-var Client_OperationsPubResult_Success_DEFAULT *PubResponse
+var ZkServer_OperationsUpdateDupResult_Success_DEFAULT *UpdateDupResponse
 
-func (p *Client_OperationsPubResult) GetSuccess() (v *PubResponse) {
+func (p *ZkServer_OperationsUpdateDupResult) GetSuccess() (v *UpdateDupResponse) {
 	if !p.IsSetSuccess() {
-		return Client_OperationsPubResult_Success_DEFAULT
+		return ZkServer_OperationsUpdateDupResult_Success_DEFAULT
 	}
 	return p.Success
 }
-func (p *Client_OperationsPubResult) SetSuccess(x interface{}) {
-	p.Success = x.(*PubResponse)
+func (p *ZkServer_OperationsUpdateDupResult) SetSuccess(x interface{}) {
+	p.Success = x.(*UpdateDupResponse)
 }
 
-func (p *Client_OperationsPubResult) IsSetSuccess() bool {
+func (p *ZkServer_OperationsUpdateDupResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *Client_OperationsPubResult) String() string {
+func (p *ZkServer_OperationsUpdateDupResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("Client_OperationsPubResult(%+v)", *p)
+	return fmt.Sprintf("ZkServer_OperationsUpdateDupResult(%+v)", *p)
 }
 
-var fieldIDToName_Client_OperationsPubResult = map[int16]string{
-	0: "success",
-}
-
-type Client_OperationsPingpongArgs struct {
-	Req *PingPongRequest `thrift:"req,1" frugal:"1,default,PingPongRequest" json:"req"`
-}
-
-func NewClient_OperationsPingpongArgs() *Client_OperationsPingpongArgs {
-	return &Client_OperationsPingpongArgs{}
-}
-
-func (p *Client_OperationsPingpongArgs) InitDefault() {
-}
-
-var Client_OperationsPingpongArgs_Req_DEFAULT *PingPongRequest
-
-func (p *Client_OperationsPingpongArgs) GetReq() (v *PingPongRequest) {
-	if !p.IsSetReq() {
-		return Client_OperationsPingpongArgs_Req_DEFAULT
-	}
-	return p.Req
-}
-func (p *Client_OperationsPingpongArgs) SetReq(val *PingPongRequest) {
-	p.Req = val
-}
-
-func (p *Client_OperationsPingpongArgs) IsSetReq() bool {
-	return p.Req != nil
-}
-
-func (p *Client_OperationsPingpongArgs) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("Client_OperationsPingpongArgs(%+v)", *p)
-}
-
-var fieldIDToName_Client_OperationsPingpongArgs = map[int16]string{
-	1: "req",
-}
-
-type Client_OperationsPingpongResult struct {
-	Success *PingPongResponse `thrift:"success,0,optional" frugal:"0,optional,PingPongResponse" json:"success,omitempty"`
-}
-
-func NewClient_OperationsPingpongResult() *Client_OperationsPingpongResult {
-	return &Client_OperationsPingpongResult{}
-}
-
-func (p *Client_OperationsPingpongResult) InitDefault() {
-}
-
-var Client_OperationsPingpongResult_Success_DEFAULT *PingPongResponse
-
-func (p *Client_OperationsPingpongResult) GetSuccess() (v *PingPongResponse) {
-	if !p.IsSetSuccess() {
-		return Client_OperationsPingpongResult_Success_DEFAULT
-	}
-	return p.Success
-}
-func (p *Client_OperationsPingpongResult) SetSuccess(x interface{}) {
-	p.Success = x.(*PingPongResponse)
-}
-
-func (p *Client_OperationsPingpongResult) IsSetSuccess() bool {
-	return p.Success != nil
-}
-
-func (p *Client_OperationsPingpongResult) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("Client_OperationsPingpongResult(%+v)", *p)
-}
-
-var fieldIDToName_Client_OperationsPingpongResult = map[int16]string{
+var fieldIDToName_ZkServer_OperationsUpdateDupResult = map[int16]string{
 	0: "success",
 }

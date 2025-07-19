@@ -3,11 +3,10 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/cloudwego/kitex/server"
+	"sync"
 	"hanyuMQ/kitex_gen/api"
 	"hanyuMQ/kitex_gen/api/server_operations"
-	"sync"
-
-	"github.com/cloudwego/kitex/server"
 )
 
 type RPCServer struct {
@@ -35,26 +34,56 @@ func (s *RPCServer) Start(opts []server.Option) error {
 	return nil
 }
 
+// 处理推送请求
 func (s *RPCServer) Push(ctx context.Context, req *api.PushRequest) (resp *api.PushResponse, err error) {
 	fmt.Println(req)
-	return &api.PushResponse{
-		Ret: true,
-	}, nil
+	err = s.server.PushHandle(push{
+		producer: req.Producer,
+		topic:    req.Topic,
+		key:      req.Key,
+		message:  req.Message,
+	})
+	if err == nil {
+		return &api.PushResponse{Ret: false}, nil
+	}
+	return &api.PushResponse{Ret: false}, err
 }
 
+// 处理拉取请求
 func (s *RPCServer) Pull(ctx context.Context, req *api.PullRequest) (resp *api.PullResponse, err error) {
+	ret, err := s.server.PullHandle(pull{
+		consumer: req.Consumer,
+		topic:    req.Topic,
+		key:      req.Key,
+	})
+	if err == nil {
+		return &api.PullResponse{Message: ret.message}, nil
+	}
 	return &api.PullResponse{
-		Message: "111",
+		Message: "error", //有错误默认返回error
 	}, nil
 }
 
 func (s *RPCServer) Info(ctx context.Context, req *api.InfoRequest) (resp *api.InfoResponse, err error) {
 	//get client_server's ip and port
-
 	err = s.server.InfoHandle(req.IpPort)
 	if err == nil {
 		return &api.InfoResponse{Ret: true}, nil
 	}
-
 	return &api.InfoResponse{Ret: false}, err
+}
+
+// 处理订阅请求
+func (s *RPCServer) Sub(ctx context.Context, req *api.SubRequest) (resp *api.SubResponse, err error) {
+	err = s.server.SubHandle(sub{
+		consumer: req.Consumer,
+		topic:    req.Topic,
+		key:      req.Key,
+		option:   req.Option,
+	})
+
+	if err == nil {
+		return &api.SubResponse{Ret: true}, nil
+	}
+	return &api.SubResponse{Ret: false}, err
 }

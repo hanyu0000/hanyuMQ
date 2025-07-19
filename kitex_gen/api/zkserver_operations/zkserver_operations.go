@@ -34,24 +34,10 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"ProGetBroker": kitex.NewMethodInfo(
-		proGetBrokerHandler,
-		newZkServer_OperationsProGetBrokerArgs,
-		newZkServer_OperationsProGetBrokerResult,
-		false,
-		kitex.WithStreamingMode(kitex.StreamingNone),
-	),
 	"SetPartitionState": kitex.NewMethodInfo(
 		setPartitionStateHandler,
 		newZkServer_OperationsSetPartitionStateArgs,
 		newZkServer_OperationsSetPartitionStateResult,
-		false,
-		kitex.WithStreamingMode(kitex.StreamingNone),
-	),
-	"ConStartGetBroker": kitex.NewMethodInfo(
-		conStartGetBrokerHandler,
-		newZkServer_OperationsConStartGetBrokerArgs,
-		newZkServer_OperationsConStartGetBrokerResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -62,17 +48,24 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"UpdatePTPOffset": kitex.NewMethodInfo(
-		updatePTPOffsetHandler,
-		newZkServer_OperationsUpdatePTPOffsetArgs,
-		newZkServer_OperationsUpdatePTPOffsetResult,
+	"ProGetBroker": kitex.NewMethodInfo(
+		proGetBrokerHandler,
+		newZkServer_OperationsProGetBrokerArgs,
+		newZkServer_OperationsProGetBrokerResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"UpdateDup": kitex.NewMethodInfo(
-		updateDupHandler,
-		newZkServer_OperationsUpdateDupArgs,
-		newZkServer_OperationsUpdateDupResult,
+	"ConStartGetBroker": kitex.NewMethodInfo(
+		conStartGetBrokerHandler,
+		newZkServer_OperationsConStartGetBrokerArgs,
+		newZkServer_OperationsConStartGetBrokerResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"BroGetConfig": kitex.NewMethodInfo(
+		broGetConfigHandler,
+		newZkServer_OperationsBroGetConfigArgs,
+		newZkServer_OperationsBroGetConfigResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -90,10 +83,17 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
-	"BroGetConfig": kitex.NewMethodInfo(
-		broGetConfigHandler,
-		newZkServer_OperationsBroGetConfigArgs,
-		newZkServer_OperationsBroGetConfigResult,
+	"UpdatePTPOffset": kitex.NewMethodInfo(
+		updatePTPOffsetHandler,
+		newZkServer_OperationsUpdatePTPOffsetArgs,
+		newZkServer_OperationsUpdatePTPOffsetResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingNone),
+	),
+	"UpdateDup": kitex.NewMethodInfo(
+		updateDupHandler,
+		newZkServer_OperationsUpdateDupArgs,
+		newZkServer_OperationsUpdateDupResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingNone),
 	),
@@ -217,24 +217,6 @@ func newZkServer_OperationsCreatePartResult() interface{} {
 	return api.NewZkServer_OperationsCreatePartResult()
 }
 
-func proGetBrokerHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*api.ZkServer_OperationsProGetBrokerArgs)
-	realResult := result.(*api.ZkServer_OperationsProGetBrokerResult)
-	success, err := handler.(api.ZkServer_Operations).ProGetBroker(ctx, realArg.Req)
-	if err != nil {
-		return err
-	}
-	realResult.Success = success
-	return nil
-}
-func newZkServer_OperationsProGetBrokerArgs() interface{} {
-	return api.NewZkServer_OperationsProGetBrokerArgs()
-}
-
-func newZkServer_OperationsProGetBrokerResult() interface{} {
-	return api.NewZkServer_OperationsProGetBrokerResult()
-}
-
 func setPartitionStateHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*api.ZkServer_OperationsSetPartitionStateArgs)
 	realResult := result.(*api.ZkServer_OperationsSetPartitionStateResult)
@@ -251,24 +233,6 @@ func newZkServer_OperationsSetPartitionStateArgs() interface{} {
 
 func newZkServer_OperationsSetPartitionStateResult() interface{} {
 	return api.NewZkServer_OperationsSetPartitionStateResult()
-}
-
-func conStartGetBrokerHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*api.ZkServer_OperationsConStartGetBrokerArgs)
-	realResult := result.(*api.ZkServer_OperationsConStartGetBrokerResult)
-	success, err := handler.(api.ZkServer_Operations).ConStartGetBroker(ctx, realArg.Req)
-	if err != nil {
-		return err
-	}
-	realResult.Success = success
-	return nil
-}
-func newZkServer_OperationsConStartGetBrokerArgs() interface{} {
-	return api.NewZkServer_OperationsConStartGetBrokerArgs()
-}
-
-func newZkServer_OperationsConStartGetBrokerResult() interface{} {
-	return api.NewZkServer_OperationsConStartGetBrokerResult()
 }
 
 func broInfoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -289,40 +253,58 @@ func newZkServer_OperationsBroInfoResult() interface{} {
 	return api.NewZkServer_OperationsBroInfoResult()
 }
 
-func updatePTPOffsetHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*api.ZkServer_OperationsUpdatePTPOffsetArgs)
-	realResult := result.(*api.ZkServer_OperationsUpdatePTPOffsetResult)
-	success, err := handler.(api.ZkServer_Operations).UpdatePTPOffset(ctx, realArg.Req)
+func proGetBrokerHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*api.ZkServer_OperationsProGetBrokerArgs)
+	realResult := result.(*api.ZkServer_OperationsProGetBrokerResult)
+	success, err := handler.(api.ZkServer_Operations).ProGetBroker(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newZkServer_OperationsUpdatePTPOffsetArgs() interface{} {
-	return api.NewZkServer_OperationsUpdatePTPOffsetArgs()
+func newZkServer_OperationsProGetBrokerArgs() interface{} {
+	return api.NewZkServer_OperationsProGetBrokerArgs()
 }
 
-func newZkServer_OperationsUpdatePTPOffsetResult() interface{} {
-	return api.NewZkServer_OperationsUpdatePTPOffsetResult()
+func newZkServer_OperationsProGetBrokerResult() interface{} {
+	return api.NewZkServer_OperationsProGetBrokerResult()
 }
 
-func updateDupHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*api.ZkServer_OperationsUpdateDupArgs)
-	realResult := result.(*api.ZkServer_OperationsUpdateDupResult)
-	success, err := handler.(api.ZkServer_Operations).UpdateDup(ctx, realArg.Req)
+func conStartGetBrokerHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*api.ZkServer_OperationsConStartGetBrokerArgs)
+	realResult := result.(*api.ZkServer_OperationsConStartGetBrokerResult)
+	success, err := handler.(api.ZkServer_Operations).ConStartGetBroker(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newZkServer_OperationsUpdateDupArgs() interface{} {
-	return api.NewZkServer_OperationsUpdateDupArgs()
+func newZkServer_OperationsConStartGetBrokerArgs() interface{} {
+	return api.NewZkServer_OperationsConStartGetBrokerArgs()
 }
 
-func newZkServer_OperationsUpdateDupResult() interface{} {
-	return api.NewZkServer_OperationsUpdateDupResult()
+func newZkServer_OperationsConStartGetBrokerResult() interface{} {
+	return api.NewZkServer_OperationsConStartGetBrokerResult()
+}
+
+func broGetConfigHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*api.ZkServer_OperationsBroGetConfigArgs)
+	realResult := result.(*api.ZkServer_OperationsBroGetConfigResult)
+	success, err := handler.(api.ZkServer_Operations).BroGetConfig(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newZkServer_OperationsBroGetConfigArgs() interface{} {
+	return api.NewZkServer_OperationsBroGetConfigArgs()
+}
+
+func newZkServer_OperationsBroGetConfigResult() interface{} {
+	return api.NewZkServer_OperationsBroGetConfigResult()
 }
 
 func becomeLeaderHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
@@ -361,22 +343,40 @@ func newZkServer_OperationsGetNewLeaderResult() interface{} {
 	return api.NewZkServer_OperationsGetNewLeaderResult()
 }
 
-func broGetConfigHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
-	realArg := arg.(*api.ZkServer_OperationsBroGetConfigArgs)
-	realResult := result.(*api.ZkServer_OperationsBroGetConfigResult)
-	success, err := handler.(api.ZkServer_Operations).BroGetConfig(ctx, realArg.Req)
+func updatePTPOffsetHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*api.ZkServer_OperationsUpdatePTPOffsetArgs)
+	realResult := result.(*api.ZkServer_OperationsUpdatePTPOffsetResult)
+	success, err := handler.(api.ZkServer_Operations).UpdatePTPOffset(ctx, realArg.Req)
 	if err != nil {
 		return err
 	}
 	realResult.Success = success
 	return nil
 }
-func newZkServer_OperationsBroGetConfigArgs() interface{} {
-	return api.NewZkServer_OperationsBroGetConfigArgs()
+func newZkServer_OperationsUpdatePTPOffsetArgs() interface{} {
+	return api.NewZkServer_OperationsUpdatePTPOffsetArgs()
 }
 
-func newZkServer_OperationsBroGetConfigResult() interface{} {
-	return api.NewZkServer_OperationsBroGetConfigResult()
+func newZkServer_OperationsUpdatePTPOffsetResult() interface{} {
+	return api.NewZkServer_OperationsUpdatePTPOffsetResult()
+}
+
+func updateDupHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*api.ZkServer_OperationsUpdateDupArgs)
+	realResult := result.(*api.ZkServer_OperationsUpdateDupResult)
+	success, err := handler.(api.ZkServer_Operations).UpdateDup(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newZkServer_OperationsUpdateDupArgs() interface{} {
+	return api.NewZkServer_OperationsUpdateDupArgs()
+}
+
+func newZkServer_OperationsUpdateDupResult() interface{} {
+	return api.NewZkServer_OperationsUpdateDupResult()
 }
 
 type kClient struct {
@@ -419,31 +419,11 @@ func (p *kClient) CreatePart(ctx context.Context, req *api.CreatePartRequest) (r
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) ProGetBroker(ctx context.Context, req *api.ProGetBrokRequest) (r *api.ProGetBrokResponse, err error) {
-	var _args api.ZkServer_OperationsProGetBrokerArgs
-	_args.Req = req
-	var _result api.ZkServer_OperationsProGetBrokerResult
-	if err = p.c.Call(ctx, "ProGetBroker", &_args, &_result); err != nil {
-		return
-	}
-	return _result.GetSuccess(), nil
-}
-
 func (p *kClient) SetPartitionState(ctx context.Context, req *api.SetPartitionStateRequest) (r *api.SetPartitionStateResponse, err error) {
 	var _args api.ZkServer_OperationsSetPartitionStateArgs
 	_args.Req = req
 	var _result api.ZkServer_OperationsSetPartitionStateResult
 	if err = p.c.Call(ctx, "SetPartitionState", &_args, &_result); err != nil {
-		return
-	}
-	return _result.GetSuccess(), nil
-}
-
-func (p *kClient) ConStartGetBroker(ctx context.Context, req *api.ConStartGetBrokRequest) (r *api.ConStartGetBrokResponse, err error) {
-	var _args api.ZkServer_OperationsConStartGetBrokerArgs
-	_args.Req = req
-	var _result api.ZkServer_OperationsConStartGetBrokerResult
-	if err = p.c.Call(ctx, "ConStartGetBroker", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -459,21 +439,31 @@ func (p *kClient) BroInfo(ctx context.Context, req *api.BroInfoRequest) (r *api.
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) UpdatePTPOffset(ctx context.Context, req *api.UpdatePTPOffsetRequest) (r *api.UpdatePTPOffsetResponse, err error) {
-	var _args api.ZkServer_OperationsUpdatePTPOffsetArgs
+func (p *kClient) ProGetBroker(ctx context.Context, req *api.ProGetBrokRequest) (r *api.ProGetBrokResponse, err error) {
+	var _args api.ZkServer_OperationsProGetBrokerArgs
 	_args.Req = req
-	var _result api.ZkServer_OperationsUpdatePTPOffsetResult
-	if err = p.c.Call(ctx, "UpdatePTPOffset", &_args, &_result); err != nil {
+	var _result api.ZkServer_OperationsProGetBrokerResult
+	if err = p.c.Call(ctx, "ProGetBroker", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) UpdateDup(ctx context.Context, req *api.UpdateDupRequest) (r *api.UpdateDupResponse, err error) {
-	var _args api.ZkServer_OperationsUpdateDupArgs
+func (p *kClient) ConStartGetBroker(ctx context.Context, req *api.ConStartGetBrokRequest) (r *api.ConStartGetBrokResponse, err error) {
+	var _args api.ZkServer_OperationsConStartGetBrokerArgs
 	_args.Req = req
-	var _result api.ZkServer_OperationsUpdateDupResult
-	if err = p.c.Call(ctx, "UpdateDup", &_args, &_result); err != nil {
+	var _result api.ZkServer_OperationsConStartGetBrokerResult
+	if err = p.c.Call(ctx, "ConStartGetBroker", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) BroGetConfig(ctx context.Context, req *api.BroGetConfigRequest) (r *api.BroGetConfigResponse, err error) {
+	var _args api.ZkServer_OperationsBroGetConfigArgs
+	_args.Req = req
+	var _result api.ZkServer_OperationsBroGetConfigResult
+	if err = p.c.Call(ctx, "BroGetConfig", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -499,11 +489,21 @@ func (p *kClient) GetNewLeader(ctx context.Context, req *api.GetNewLeaderRequest
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) BroGetConfig(ctx context.Context, req *api.BroGetConfigRequest) (r *api.BroGetConfigResponse, err error) {
-	var _args api.ZkServer_OperationsBroGetConfigArgs
+func (p *kClient) UpdatePTPOffset(ctx context.Context, req *api.UpdatePTPOffsetRequest) (r *api.UpdatePTPOffsetResponse, err error) {
+	var _args api.ZkServer_OperationsUpdatePTPOffsetArgs
 	_args.Req = req
-	var _result api.ZkServer_OperationsBroGetConfigResult
-	if err = p.c.Call(ctx, "BroGetConfig", &_args, &_result); err != nil {
+	var _result api.ZkServer_OperationsUpdatePTPOffsetResult
+	if err = p.c.Call(ctx, "UpdatePTPOffset", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateDup(ctx context.Context, req *api.UpdateDupRequest) (r *api.UpdateDupResponse, err error) {
+	var _args api.ZkServer_OperationsUpdateDupArgs
+	_args.Req = req
+	var _result api.ZkServer_OperationsUpdateDupResult
+	if err = p.c.Call(ctx, "UpdateDup", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -14,15 +14,15 @@ type Client interface {
 	Sub(ctx context.Context, req *api.SubRequest, callOptions ...callopt.Option) (r *api.SubResponse, err error)
 	CreateTopic(ctx context.Context, req *api.CreateTopicRequest, callOptions ...callopt.Option) (r *api.CreateTopicResponse, err error)
 	CreatePart(ctx context.Context, req *api.CreatePartRequest, callOptions ...callopt.Option) (r *api.CreatePartResponse, err error)
-	ProGetBroker(ctx context.Context, req *api.ProGetBrokRequest, callOptions ...callopt.Option) (r *api.ProGetBrokResponse, err error)
 	SetPartitionState(ctx context.Context, req *api.SetPartitionStateRequest, callOptions ...callopt.Option) (r *api.SetPartitionStateResponse, err error)
-	ConStartGetBroker(ctx context.Context, req *api.ConStartGetBrokRequest, callOptions ...callopt.Option) (r *api.ConStartGetBrokResponse, err error)
 	BroInfo(ctx context.Context, req *api.BroInfoRequest, callOptions ...callopt.Option) (r *api.BroInfoResponse, err error)
-	UpdatePTPOffset(ctx context.Context, req *api.UpdatePTPOffsetRequest, callOptions ...callopt.Option) (r *api.UpdatePTPOffsetResponse, err error)
-	UpdateDup(ctx context.Context, req *api.UpdateDupRequest, callOptions ...callopt.Option) (r *api.UpdateDupResponse, err error)
+	ProGetBroker(ctx context.Context, req *api.ProGetBrokRequest, callOptions ...callopt.Option) (r *api.ProGetBrokResponse, err error)
+	ConStartGetBroker(ctx context.Context, req *api.ConStartGetBrokRequest, callOptions ...callopt.Option) (r *api.ConStartGetBrokResponse, err error)
+	BroGetConfig(ctx context.Context, req *api.BroGetConfigRequest, callOptions ...callopt.Option) (r *api.BroGetConfigResponse, err error)
 	BecomeLeader(ctx context.Context, req *api.BecomeLeaderRequest, callOptions ...callopt.Option) (r *api.BecomeLeaderResponse, err error)
 	GetNewLeader(ctx context.Context, req *api.GetNewLeaderRequest, callOptions ...callopt.Option) (r *api.GetNewLeaderResponse, err error)
-	BroGetConfig(ctx context.Context, req *api.BroGetConfigRequest, callOptions ...callopt.Option) (r *api.BroGetConfigResponse, err error)
+	UpdatePTPOffset(ctx context.Context, req *api.UpdatePTPOffsetRequest, callOptions ...callopt.Option) (r *api.UpdatePTPOffsetResponse, err error)
+	UpdateDup(ctx context.Context, req *api.UpdateDupRequest, callOptions ...callopt.Option) (r *api.UpdateDupResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -69,19 +69,9 @@ func (p *kZkServer_OperationsClient) CreatePart(ctx context.Context, req *api.Cr
 	return p.kClient.CreatePart(ctx, req)
 }
 
-func (p *kZkServer_OperationsClient) ProGetBroker(ctx context.Context, req *api.ProGetBrokRequest, callOptions ...callopt.Option) (r *api.ProGetBrokResponse, err error) {
-	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.ProGetBroker(ctx, req)
-}
-
 func (p *kZkServer_OperationsClient) SetPartitionState(ctx context.Context, req *api.SetPartitionStateRequest, callOptions ...callopt.Option) (r *api.SetPartitionStateResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.SetPartitionState(ctx, req)
-}
-
-func (p *kZkServer_OperationsClient) ConStartGetBroker(ctx context.Context, req *api.ConStartGetBrokRequest, callOptions ...callopt.Option) (r *api.ConStartGetBrokResponse, err error) {
-	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.ConStartGetBroker(ctx, req)
 }
 
 func (p *kZkServer_OperationsClient) BroInfo(ctx context.Context, req *api.BroInfoRequest, callOptions ...callopt.Option) (r *api.BroInfoResponse, err error) {
@@ -89,14 +79,19 @@ func (p *kZkServer_OperationsClient) BroInfo(ctx context.Context, req *api.BroIn
 	return p.kClient.BroInfo(ctx, req)
 }
 
-func (p *kZkServer_OperationsClient) UpdatePTPOffset(ctx context.Context, req *api.UpdatePTPOffsetRequest, callOptions ...callopt.Option) (r *api.UpdatePTPOffsetResponse, err error) {
+func (p *kZkServer_OperationsClient) ProGetBroker(ctx context.Context, req *api.ProGetBrokRequest, callOptions ...callopt.Option) (r *api.ProGetBrokResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.UpdatePTPOffset(ctx, req)
+	return p.kClient.ProGetBroker(ctx, req)
 }
 
-func (p *kZkServer_OperationsClient) UpdateDup(ctx context.Context, req *api.UpdateDupRequest, callOptions ...callopt.Option) (r *api.UpdateDupResponse, err error) {
+func (p *kZkServer_OperationsClient) ConStartGetBroker(ctx context.Context, req *api.ConStartGetBrokRequest, callOptions ...callopt.Option) (r *api.ConStartGetBrokResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.UpdateDup(ctx, req)
+	return p.kClient.ConStartGetBroker(ctx, req)
+}
+
+func (p *kZkServer_OperationsClient) BroGetConfig(ctx context.Context, req *api.BroGetConfigRequest, callOptions ...callopt.Option) (r *api.BroGetConfigResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.BroGetConfig(ctx, req)
 }
 
 func (p *kZkServer_OperationsClient) BecomeLeader(ctx context.Context, req *api.BecomeLeaderRequest, callOptions ...callopt.Option) (r *api.BecomeLeaderResponse, err error) {
@@ -109,7 +104,12 @@ func (p *kZkServer_OperationsClient) GetNewLeader(ctx context.Context, req *api.
 	return p.kClient.GetNewLeader(ctx, req)
 }
 
-func (p *kZkServer_OperationsClient) BroGetConfig(ctx context.Context, req *api.BroGetConfigRequest, callOptions ...callopt.Option) (r *api.BroGetConfigResponse, err error) {
+func (p *kZkServer_OperationsClient) UpdatePTPOffset(ctx context.Context, req *api.UpdatePTPOffsetRequest, callOptions ...callopt.Option) (r *api.UpdatePTPOffsetResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
-	return p.kClient.BroGetConfig(ctx, req)
+	return p.kClient.UpdatePTPOffset(ctx, req)
+}
+
+func (p *kZkServer_OperationsClient) UpdateDup(ctx context.Context, req *api.UpdateDupRequest, callOptions ...callopt.Option) (r *api.UpdateDupResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UpdateDup(ctx, req)
 }
